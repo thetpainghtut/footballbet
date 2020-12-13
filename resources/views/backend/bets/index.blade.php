@@ -20,7 +20,12 @@
                     <input type="date" class="form-control" placeholder="End Date">
                   </div>
                   <div class="col">
-                    <input type="submit" name="btn-submit" class="btn btn-info" value="Search">
+                    <select name="" class="form-control d-inline">
+                      <option value="">Mg Mg</option>
+                      <option value="">Ko Ko</option>
+                      <option value="">Aung Aung</option>
+                    </select>
+                    {{-- <input type="submit" name="btn-submit" class="btn btn-info" value="Search"> --}}
                   </div>
                 </div>
               </form>

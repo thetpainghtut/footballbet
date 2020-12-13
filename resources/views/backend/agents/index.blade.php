@@ -18,6 +18,7 @@
                     <th>Name</th>
                     <th>Phone No</th>
                     <th>Points</th>
+                    <th>Commission Rate</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -26,18 +27,21 @@
                     <td>Mark</td>
                     <td>099876543</td>
                     <td>12,000</td>
+                    <td>0.5</td>
                   </tr>
                   <tr>
                     <th scope="row">2</th>
                     <td>Jacob</td>
                     <td>098765432</td>
                     <td>32,000</td>
+                    <td>1</td>
                   </tr>
                   <tr>
                     <th scope="row">3</th>
                     <td>Larry</td>
                     <td>0987654321</td>
                     <td>9,000</td>
+                    <td>1.5</td>
                   </tr>
                 </tbody>
               </table>
