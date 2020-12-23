@@ -47,26 +47,20 @@ Route::get('dashboard', function (){
 })->name('dashboard');
 
 // agents
-Route::get('agents', function (){
-  return view('backend.agents.index');
-})->name('agents.index');
 
 // matches
 Route::get('matches', function (){
   return view('backend.matches.index');
 })->name('matches.index');
 
-// leagues
-Route::get('leagues', function (){
-  return view('backend.leagues.index');
-})->name('leagues.index');
-
-// teams
-Route::get('teams', function (){
-  return view('backend.teams.index');
-})->name('teams.index');
 
 // bets
 Route::get('bets', function (){
   return view('backend.bets.index');
 })->name('bets.index');
+
+Route::prefix('master')->group(function () {
+Route::resource('agents','AgentController');
+Route::resource('leagues','LeagueController');
+Route::resource('teams','TeamController');
+});
