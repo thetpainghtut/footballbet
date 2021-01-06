@@ -46,14 +46,6 @@ Route::get('dashboard', function (){
   return view('backend.dashboard');
 })->name('dashboard');
 
-// agents
-
-// matches
-Route::get('matches', function (){
-  return view('backend.matches.index');
-})->name('matches.index');
-
-
 // bets
 Route::get('bets', function (){
   return view('backend.bets.index');
@@ -63,4 +55,5 @@ Route::prefix('master')->group(function () {
 Route::resource('agents','AgentController');
 Route::resource('leagues','LeagueController');
 Route::resource('teams','TeamController');
+Route::resource('matches','MatchController');
 });

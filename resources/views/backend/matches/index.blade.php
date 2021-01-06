@@ -8,7 +8,7 @@
           <div class="card">
             <div class="card-header">
               <h6 class="text-uppercase mb-0 d-inline-block">Match List Today</h6>
-              <a href="#" class="btn btn-primary float-right">Add </a>
+              <a href="{{route('matches.create')}}" class="btn btn-primary float-right">Add </a>
             </div>
             <div class="card-body">
               <table class="table table-bordered">
