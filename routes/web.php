@@ -53,14 +53,13 @@ Route::get('matches', function (){
   return view('backend.matches.index');
 })->name('matches.index');
 
-
 // bets
 Route::get('bets', function (){
   return view('backend.bets.index');
 })->name('bets.index');
 
 Route::prefix('master')->group(function () {
-Route::resource('agents','AgentController');
-Route::resource('leagues','LeagueController');
-Route::resource('teams','TeamController');
+  Route::resource('agents','AgentController');
+  Route::resource('leagues','LeagueController');
+  Route::resource('teams','TeamController');
 });
