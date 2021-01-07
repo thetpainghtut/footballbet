@@ -21,9 +21,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('main', function (){
-  return view('frontend.main');
-})->name('main');
+Route::get('main','MainController@main')->name('main');
+Route::post('matchbyleague','MainController@matchbyleague')->name('matchbyleague');
 
 Route::get('bet_list', function (){
   return view('frontend.bet_list');
@@ -46,7 +45,6 @@ Route::get('dashboard', function (){
   return view('backend.dashboard');
 })->name('dashboard');
 
-// bets
 Route::get('bets', function (){
   return view('backend.bets.index');
 })->name('bets.index');
@@ -57,3 +55,7 @@ Route::resource('leagues','LeagueController');
 Route::resource('teams','TeamController');
 Route::resource('matches','MatchController');
 });
+Route::post('teambyleague','MatchController@teambyleague')->name('teambyleague');
+Route::post('storebet','MatchController@storebet')->name('storebet');
+Route::post('betbymatch','MatchController@betbymatch')->name('betbymatch');
+Route::get('viewbet/{id}','MatchController@viewbet')->name('viewbet');

@@ -5,7 +5,7 @@
     <section class="py-5">
       <div class="row">
          @if(session('successMsg') != NULL)
-          <div class="alert alert-success alert-dismissible fade show myalert" role="alert">
+          <div class="alert alert-success alert-dismissible fade show myalert mx-3" role="alert">
               <strong> ✅ SUCCESS!</strong>
               {{ session('successMsg') }}
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">

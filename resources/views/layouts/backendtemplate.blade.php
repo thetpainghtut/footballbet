@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="{{ asset('backend_assets/vendor/bootstrap/css/bootstrap.min.css') }}">
     <!-- Font Awesome CSS-->
@@ -83,12 +84,17 @@
       <div id="sidebar" class="sidebar py-3">
         <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MAIN</div>
         <ul class="sidebar-menu list-unstyled">
-              <li class="sidebar-list-item"><a href="{{route('dashboard')}}" class="sidebar-link text-muted {{ Request::is('dashboard') ? 'active' : '' }}"><i class="o-home-1 mr-3 text-gray"></i><span>Dashboard</span></a></li>
+
+          <li class="sidebar-list-item"><a href="{{route('dashboard')}}" class="sidebar-link text-muted {{ Request::is('dashboard') ? 'active' : '' }}"><i class="o-home-1 mr-3 text-gray"></i><span>Dashboard</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('matches.index')}}" class="sidebar-link text-muted {{ Request::is('matches*') ? 'active' : '' }}"><i class="o-table-content-1 mr-3 text-gray"></i><span>Matches</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('bets.index')}}" class="sidebar-link text-muted {{ Request::is('bets*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Bets</span></a></li>
+              
               <li class="sidebar-list-item"><a href="{{route('agents.index')}}" class="sidebar-link text-muted {{ Request::is('master/agents*') ? 'active' : '' }}"><i class="o-sales-up-1 mr-3 text-gray"></i><span>Agents</span></a></li>
-              <li class="sidebar-list-item"><a href="{{route('matches.index')}}" class="sidebar-link text-muted {{ Request::is('master/matches*') ? 'active' : '' }}"><i class="o-table-content-1 mr-3 text-gray"></i><span>Matches</span></a></li>
+              
               <li class="sidebar-list-item"><a href="{{route('leagues.index')}}" class="sidebar-link text-muted {{ Request::is('master/leagues*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Leagues</span></a></li>
               <li class="sidebar-list-item"><a href="{{route('teams.index')}}" class="sidebar-link text-muted {{ Request::is('master/teams*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Teams</span></a></li>
-              <li class="sidebar-list-item"><a href="{{route('bets.index')}}" class="sidebar-link text-muted {{ Request::is('bets*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Bets</span></a></li>
+              
+
 
           {{-- <li class="sidebar-list-item"><a href="#" data-toggle="collapse" data-target="#pages" aria-expanded="false" aria-controls="pages" class="sidebar-link text-muted"><i class="o-wireframe-1 mr-3 text-gray"></i><span>Teams</span></a>
             <div id="pages" class="collapse">

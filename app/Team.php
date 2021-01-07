@@ -11,7 +11,11 @@ class Team extends Model
     'name'
 	];
 	 public function leagues(){
-             return $this->belongsToMany('App\League','team_leagues','team_id','league_id')
-      ->withTimestamps();;
+      return $this->belongsToMany('App\League','team_leagues')->withTimestamps();
     }
+
+    public function matches(){
+    	return $this->hasMany('App\Match');
+    }
+
 }

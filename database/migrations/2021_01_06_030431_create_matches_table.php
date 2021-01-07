@@ -15,10 +15,12 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('league_id');
             $table->unsignedBigInteger('home_team_id');
             $table->unsignedBigInteger('away_team_id');
             $table->string('event_date');
             $table->string('event_time');
+            $table->softDeletes();
             $table->timestamps();
             $table->foreign('home_team_id')
                     ->references('id')->on('teams')
@@ -26,6 +28,10 @@ class CreateMatchesTable extends Migration
 
             $table->foreign('away_team_id')
                     ->references('id')->on('teams')
+                    ->onDelete('cascade');
+
+            $table->foreign('league_id')
+                    ->references('id')->on('leagues')
                     ->onDelete('cascade');
 
         });

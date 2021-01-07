@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>Page - @yield('title')</title>
 
@@ -104,37 +105,7 @@
           </ul>
         </div>
 
-        <ul class="list-group my-4">
-          <li class="list-group-item active"> Leagues </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            English Premier League
-            <span class="badge badge-primary badge-pill">14</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Spanish La Liga
-            <span class="badge badge-primary badge-pill">2</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            German Bundesliga
-            <span class="badge badge-primary badge-pill">1</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Italian Serie A
-            <span class="badge badge-primary badge-pill">1</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            French Ligue 1
-            <span class="badge badge-primary badge-pill">1</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Dutch Eredivisie
-            <span class="badge badge-primary badge-pill">1</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Chinese Super League
-            <span class="badge badge-primary badge-pill">1</span>
-          </li>
-        </ul>
+        <x-league-component></x-league-component>
 
         <ul class="list-group soccer my-4 d-none">
           <li class="list-group-item active"> Soccer </li>

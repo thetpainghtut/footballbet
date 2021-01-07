@@ -12,6 +12,18 @@
             <div class="card-body">
               <form action="{{route('matches.store')}}" method="POST">
             @csrf
+
+            <div class="form-group">
+              <label for="league">League:</label>
+              <select class="form-control" id="league" name="league">
+                <option value="">Choose League</option>
+                @foreach($leagues as $row)
+                <option value="{{$row->id}}">{{$row->name}}</option>
+                @endforeach
+              </select>
+              <div class="form-control-feedback text-danger"> {{$errors->first('league') }} </div>
+            </div>
+
             <div class="form-group">
               <label for="hteam">Home Team:</label>
               <select class="form-control" id="hteam" name="hteam">
@@ -35,10 +47,15 @@
             </div>
 
             <div class="form-group">
+              <label for="date">Date</label>
+                <input class="form-control" type="date" id="date" name="date">
+                <div class="form-control-feedback text-danger"> {{$errors->first('date') }} </div>
+            </div>
+
+            <div class="form-group">
               <label for="example-time-input">Time</label>
-              <div class="col-10">
-                <input class="form-control" type="time" id="example-time-input" nam="time">
-              </div>
+                <input class="form-control" type="time" id="example-time-input" name="time">
+                <div class="form-control-feedback text-danger"> {{$errors->first('time') }} </div>
             </div>
 
            
@@ -53,4 +70,34 @@
       </div>
     </section>
   </div>
+@endsection
+@section('script')
+<script type="text/javascript">
+  $(document).ready(function(){
+
+
+    $("#league").change(function(){
+      var id=$(this).val();
+      var url="{{route('teambyleague')}}";
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $.post(url,{id:id},function(res){
+        //console.log(res);
+        var html="";
+        $.each(res,function(i,v){
+          html+=`<option value="${v.id}">${v.name}</option>`
+        })
+        $("#hteam").html(html);
+        $("#ateam").html(html);
+
+      })
+    })
+
+
+  })
+</script>
 @endsection
