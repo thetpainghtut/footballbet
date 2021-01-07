@@ -48,7 +48,7 @@
                     <td>{{$row->event_date}}</td>
                     <td>{{ $event_time}}</td>
                     <td>{{$row->league->name}}</td>
-                    @if(count($row->betrate)>0)
+                    @if(count($row->betrates)>0)
                     <td><a href="#" class="btn btn-primary btn-sm changebet" data-id="{{$row->id}}">Channge bet</a><a href="{{route('viewbet',$row->id)}}" class="btn btn-success btn-sm view mx-1">View bet</a></td>
                     
                     @else

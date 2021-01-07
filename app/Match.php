@@ -23,7 +23,7 @@ class Match extends Model
 		return $this->belongsTo('App\Team','away_team_id');
 	}
 
-	public function betrate(){
+	public function betrates(){
 		return $this->hasMany('App\Betrate');
 	}
 

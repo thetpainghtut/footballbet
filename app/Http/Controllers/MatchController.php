@@ -17,7 +17,7 @@ class MatchController extends Controller
      */
     public function index()
     {
-        $matches=Match::doesntHave('result')->with('betrate')->get();
+        $matches=Match::doesntHave('result')->with('betrates')->get();
        // dd($matches);
         return view('backend.matches.index',compact('matches'));
     }

@@ -171,7 +171,7 @@
                 </tr>
               `
             $.each(v.matches,function(j,k){
-              var betrates=k.betrate;
+              var betrates=k.betrates;
               var rate=betrates.pop();
               var time=tConvert(k.event_time);
               if(rate.team_goal_different==null){

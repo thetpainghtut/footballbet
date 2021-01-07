@@ -16,7 +16,9 @@ class LeagueComponent extends Component
      */
     public function __construct()
     {
-        $this->leagues = League::all();
+        $this->leagues =League::whereHas('matches',function($query){
+            $query->whereHas('betrates');
+        })->get();
     }
 
     /**
