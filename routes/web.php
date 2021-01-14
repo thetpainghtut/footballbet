@@ -33,7 +33,7 @@ Route::post('cancelbet','MainController@cancelbet')->name('cancelbet');
 Route::post('generatepoint','MainController@generatepoint')->name('generatepoint');
 Route::get('result','MainController@result')->name('result');
 Route::get('bet_list','MainController@bet_list')->name('bet_list');
-
+Route::post('betsbyagent','MainController@betsbyagent')->name('betsbyagent');
 Route::get('report', function (){
   return view('frontend.report');
 })->name('report');

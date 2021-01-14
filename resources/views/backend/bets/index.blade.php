@@ -13,19 +13,22 @@
             <div class="card-body">
               <form method="" action="" class="mb-4">
                 <div class="form-row">
-                  <div class="col">
-                    <input type="date" class="form-control" placeholder="Start Date">
+                  <div class="col-3">
+                    <input type="date" class="form-control sdate" placeholder="Start Date">
                   </div>
-                  <div class="col">
-                    <input type="date" class="form-control" placeholder="End Date">
+                  <div class="col-3">
+                    <input type="date" class="form-control edate" placeholder="End Date">
                   </div>
-                  <div class="col">
-                    <select name="" class="form-control d-inline">
-                      <option value="">Mg Mg</option>
-                      <option value="">Ko Ko</option>
-                      <option value="">Aung Aung</option>
+                  <div class="col-3">
+                    <select name="" class="form-control d-inline agent">
+                      <option value="">Choose Agent</option>
+                      @foreach($allagents as $row)
+                      <option value="{{$row->id}}">{{$row->user->name}}</option>
+                      @endforeach
                     </select>
-                    {{-- <input type="submit" name="btn-submit" class="btn btn-info" value="Search"> --}}
+                  </div>
+                  <div class="col-3">
+                    <a href="#" class="btn btn-info btnsearch">search</a>
                   </div>
                 </div>
               </form>
@@ -44,9 +47,10 @@
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="mytbody">
                   @php $i=1; @endphp
                   @foreach($agents as $agent)
+                  @php $totalpoint=0; @endphp
                   @foreach($agent->betrates as $betrate)
                   <tr>
                   <td class="align-middle">{{$i++}}</th>
@@ -99,7 +103,7 @@
                           $winloosepoint+=$betrate->pivot->goal_different_equal;
                         }
                      
-
+                        $totalpoint+=$winloosepoint;
                       @endphp
                      {{$winloosepoint}}
                       
@@ -116,7 +120,7 @@
                           $winloosepoint+=$betrate->pivot->goal_different_equal;
                         }
                      
-
+                        $totalpoint+=$winloosepoint;
                       @endphp
                      {{$winloosepoint}}
                     
@@ -129,6 +133,7 @@
 
                   </tr>
                   @endforeach
+                  <tr><td colspan="7">totalpoint</td><td colspan="2" style="text-align: center">{{$totalpoint}}</td></tr>
                   @endforeach
                 </tbody>
               </table>
@@ -142,7 +147,7 @@
 @section('script')
 <script type="text/javascript">
   $(document).ready(function(){
-    $(".btncancel").click(function(){
+    $(".mytbody").on('click','.btncancel',function(){
       var id=$(this).data('id');
       var agent_id=$(this).data('agentid');
 
@@ -160,6 +165,28 @@
         window.location.reload();
       }
      })
+
+    })
+
+    $(".btnsearch").click(function(){
+      var sdate=$(".sdate").val();
+      var edate=$(".edate").val();
+      var agent_id=$(".agent").val();
+      var url="{{route('betsbyagent')}}";
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      $.post(url,{sdate:sdate,edate:edate,agent_id:agent_id},function(res){
+        //console.log(res);
+        var j=1;
+        var html="";
+        $.each(res,function(res){
+          html+=``
+        })
+
+      })
 
     })
   })
