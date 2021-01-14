@@ -46,11 +46,13 @@
                     <td>{{$row->away_team_score}}</td>
                     <td>{{$row->match->league->name}}</td>
                     <td>{{$row->match->event_date}}</td>
-                    <td><a href="#" class="btn btn-warning btnedit" data-id="{{$row->id}}" data-match="{{$row->match->home_team->name}}-{{$row->match->away_team->name}}">Edit</a>
+                    <td>
                       @if($row->match_status==1)
+                      <a href="#" class="btn btn-warning btnedit" data-id="{{$row->id}}" data-match="{{$row->match->home_team->name}}-{{$row->match->away_team->name}}">Edit</a>
                       <button class="btn btn-info btn-sm gentratepoint" data-id="{{$row->id}}" >generate point</button></td>
                       @else
-                      <button class="btn btn-success btn-sm" >generate complete</button></td>
+                      <button class="btn btn-success btn-sm" >generate complete</button>
+                    </td>
                       @endif
 
                   </tr>  

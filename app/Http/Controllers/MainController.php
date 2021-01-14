@@ -12,6 +12,7 @@ use App\MatchUser;
 use App\Result;
 use App\TransationPoint;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class MainController extends Controller
 {
@@ -139,11 +140,35 @@ class MainController extends Controller
     }
 
     public function bets(){
+        $allagents=Agent::all();
 
         $agents=Agent::with('betrates.match.result')->whereHas('betrates')->get();
         //dd($agents);
         
-        return view('backend.bets.index',compact('agents'));
+        return view('backend.bets.index',compact('agents','allagents'));
+    }
+
+
+    public function betsbyagent(Request $request){
+        $sdate=$request->sdate;
+        $edate=$request->edate;
+        $agent_id=$request->agent_id;
+
+        if($edate==null && $agent_id==null){
+        $agents=Agent::with('betrates.match.result')->whereHas('betrates')->get();
+
+        }else if($agent_id==null){
+            
+            
+        }else if($edate==null && $sdate==null){
+           
+        }else if($edate==null){
+            
+        }else{
+           
+        }
+        return $betrates;
+
     }
 
     public function storeresult(Request $request){
