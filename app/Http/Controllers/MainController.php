@@ -10,6 +10,9 @@ use App\Agent;
 use App\Betrate;
 use App\MatchUser;
 use App\Result;
+use App\TransationPoint;
+use Illuminate\Support\Facades\DB;
+
 class MainController extends Controller
 {
     public function main(){
@@ -177,17 +180,81 @@ class MainController extends Controller
     }
 
     public function generatepoint(Request $request){
+        $user = Auth::user();
+        $master_id=$user->id;
         $id=$request->id;
         //dd($id);
         $result=Result::find($id);
         $match_id=$result->match_id;
         //dd($match_id);
 
-        $agent=Agent::with('betrates')->whereHas('betrates',function($query) use($match_id){
-            $query->where('match_id',$match_id);
-        })->get();
 
-        dd($agent);
+        $agentbetrates=DB::table('agent_betrate')
+            ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+            ->where('betrates.match_id',$match_id)
+            ->select('betrates.*','agent_betrate.*')
+            ->get();
+        //dd($agents);
+        $winloosepoint=0;
+
+
+            foreach ($agentbetrates as $betrate) {
+                if($betrate->betting_total_goal_status===null){ 
+                      $team_goal_different=$betrate->team_goal_different;
+                      $bteam_goal_different=$result->home_team_score-$result->away_team_score;
+                      $winloosepoint=0;
+                      if($bteam_goal_different>$team_goal_different){
+                        $winloosepoint+=$betrate->goal_different_greater;
+                        }else if($bteam_goal_different<$team_goal_different){
+                          $winloosepoint+=$betrate->goal_different_less;
+                        }else{
+                          $winloosepoint+=$betrate->goal_different_equal;
+                        }
+                }else{
+                    $team_goal_different=$betrate->team_goal;
+                    $bteam_goal_different=$result->home_team_score+$result->away_team_score;
+                    $winloosepoint=0;
+                    if($bteam_goal_different>$team_goal_different){
+                    $winloosepoint+=$betrate->goal_different_greater;
+                    }else if($bteam_goal_different<$team_goal_different){
+                    $winloosepoint+=$betrate->goal_different_less;
+                    }else{
+                     $winloosepoint+=$betrate->goal_different_equal;
+                    }
+                    
+                }
+
+                $agent=Agent::find($betrate->agent_id);
+           
+                    $transation=New TransationPoint;
+                    $transation->from=$master_id;
+                    $transation->to=$agent->user_id;
+                    $transation->transation_type_id=4;
+                    $transation->points=$winloosepoint;
+                    $transation->description="refund point";
+                    $transation->save();
+                   
+                    $result->match_status=2;
+                    $result->save();
+        }
+
+
+        return "success";
+
+    }
+
+    public function result(){
+        $results=League::with('matches')->get();
+        return view('frontend.result',compact('results'));
+    }
+
+    public function bet_list(){
+        $user = Auth::user();
+        $id=$user->agent->id;
+        
+        $agent=Agent::with('betrates.match.result')->whereHas('betrates')->where('id',$id)->first();
+        //dd($agent);
+        return view('frontend.bet_list',compact('agent'));
 
     }
 

@@ -37,60 +37,30 @@
           <tr>
             <th scope="col">Date</th>
             <th scope="col">Event</th>
-            <th scope="col">First Half Score</th>
-            <th scope="col">Final Score</th>
+            <th scope="col">Goal Score</th>
           </tr>
         </thead>
         <tbody>
+         @foreach($results as $result)
           <tr>
-            <td colspan="4" class="table-info">AFC Champions League</td>
+            <td colspan="4" class="table-info">{{$result->name}}</td>
           </tr>
-          <tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Sydney FC (N) -vs- Shanghai SIPG</td>
-            <td class="align-middle">0-1</td>
-            <td class="align-middle">0-2</td>
+          @foreach($result->matches as $match)
+           @php 
+              $time=$match->event_time;
+              $event_time=date("h:i A",strtotime($time));
+            @endphp
+            <tr>
+            <th scope="row">{{$match->event_date}} {{$event_time}}</th>
+            <td class="align-middle">{{$match->home_team->name}} - {{$match->away_team->name}}</td>
+            @if($match->result==null)
+            <td>-</td>
+            @else
+            <td class="align-middle">{{$match->result->home_team_score}}-{{$match->result->away_team_score}}</td>
+            @endif
           </tr>
-          <tr>
-            <td colspan="4" class="table-info">AFC Champions League</td>
-          </tr>
-          <tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Ecuador (V) -vs- Sweden (V)</td>
-            <td class="align-middle">0-0</td>
-            <td class="align-middle">0-1</td>
-          </tr>
-          <tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Norway (V) -vs- France (V)</td>
-            <td class="align-middle">0-2</td>
-            <td class="align-middle">0-4</td>
-          </tr><tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Goias GO U20 -vs- Atletico Mineiro U20</td>
-            <td class="align-middle">0-0</td>
-            <td class="align-middle">0-0</td>
-          </tr><tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Sydney FC (N) -vs- Shanghai SIPG</td>
-            <td class="align-middle">0-1</td>
-            <td class="align-middle">0-2</td>
-          </tr><tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Vasco da Gama -vs- Fortaleza</td>
-            <td class="align-middle">2-0</td>
-            <td class="align-middle">2-2</td>
-          </tr><tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Sydney FC (N) -vs- Shanghai SIPG</td>
-            <td class="align-middle">0-1</td>
-            <td class="align-middle">0-2</td>
-          </tr><tr>
-            <th scope="row">19/11/2020 06:00 PM</th>
-            <td class="align-middle">Sydney FC (N) -vs- Shanghai SIPG</td>
-            <td class="align-middle">0-1</td>
-            <td class="align-middle">0-2</td>
-          </tr>
+          @endforeach
+         @endforeach
         </tbody>
       </table>
     </div>

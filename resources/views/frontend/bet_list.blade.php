@@ -5,72 +5,107 @@
   <div class="row my-4">
     <div class="col-md-12">
       <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">No</th>
-            <th scope="col">Soccer</th>
-            <th scope="col">Type</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-          <tr>
-            <th scope="row">#</th>
-            <td class="align-middle">Team One vs Team Two</td>
-            <td class="align-middle">AWAY</td>
-            <td class="align-middle">0.95</td>
-            <td class="align-middle">{{number_format(2000)}}</td>
-          </tr>
-        </tbody>
-      </table>
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Soccer</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Bet</th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Win/loose points</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  @php $i=1; @endphp
+                  @foreach($agent->betrates as $betrate)
+                  <tr>
+                  <td>{{$i++}}</th>
+                  @if($betrate->odd_team_status==0)
+                  <td class="align-middle"><span class="text text-danger">{{$betrate->match->home_team->name}}</span> - {{$betrate->match->away_team->name}}</td>
+                  @else
+                  <td class="align-middle">{{$betrate->match->home_team->name}} - <span class="text text-danger">{{$betrate->match->away_team->name}}</span></td>
+                  @endif
+                  <td>
+                    @if($betrate->pivot->betting_total_goal_status===null)
+                      @if($betrate->pivot->betting_team_status===0)
+                        Home
+                      @else
+                        Away
+                      @endif
+                    @elseif($betrate->pivot->betting_team_status===null)
+                      @if($betrate->pivot->betting_total_goal_status!==0)
+                        Goal Under
+                      @else
+                        Goal Over
+                      @endif
+                    @endif
+                  </td>
+                  <td>{{$agent->commission_rate}}</td>
+                  <td>
+                    @if($betrate->pivot->betting_total_goal_status===null)
+                    ({{$betrate->team_goal_different}}{{$betrate->team_bet_odd}})
+                    @else
+                    ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
+                    @endif
+                  </td>
+                  <td>{{$betrate->pivot->bet_amount}}</td>
+
+                  
+                  @if($betrate->match->result==null)
+                  <td>--</td>
+                  @else
+                  <td>
+                    @if($betrate->pivot->betting_total_goal_status===null)
+                      @php 
+                      $team_goal_different=$betrate->team_goal_different;
+                      $bteam_goal_different=$betrate->match->result->home_team_score-$betrate->match->result->away_team_score;
+                      $winloosepoint=0;
+                      if($bteam_goal_different>$team_goal_different){
+                        $winloosepoint+=$betrate->pivot->goal_different_greater;
+                        }else if($bteam_goal_different<$team_goal_different){
+                          $winloosepoint+=$betrate->pivot->goal_different_less;
+                        }else{
+                          $winloosepoint+=$betrate->pivot->goal_different_equal;
+                        }
+                     
+
+                      @endphp
+                     {{$winloosepoint}}
+                      
+                    @else
+                      @php 
+                      $team_goal_different=$betrate->team_goal;
+                      $bteam_goal_different=$betrate->match->result->home_team_score+$betrate->match->result->away_team_score;
+                      $winloosepoint=0;
+                      if($bteam_goal_different>$team_goal_different){
+                        $winloosepoint+=$betrate->pivot->goal_different_greater;
+                        }else if($bteam_goal_different<$team_goal_different){
+                          $winloosepoint+=$betrate->pivot->goal_different_less;
+                        }else{
+                          $winloosepoint+=$betrate->pivot->goal_different_equal;
+                        }
+                     
+
+                      @endphp
+                     {{$winloosepoint}}
+                    
+                    @endif
+
+                  </td>
+                  @endif
+                  
+
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
     </div>
   </div>
   {{-- end row --}}
 
-  <div class="row my-4">
+  {{-- <div class="row my-4">
     <div class="col-md-12">
       <h4>Point Rates:</h4>
     </div>
@@ -94,7 +129,7 @@
       </div>
     </div>
 
-  </div>
+  </div> --}}
   <!-- /.row -->
 </div>
 <!-- /.col-lg-9 -->

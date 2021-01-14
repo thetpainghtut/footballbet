@@ -29,13 +29,10 @@ Route::get('bets','MainController@bets')->name('bets.index');
 Route::post('storeresult','MainController@storeresult')->name('storeresult');
 Route::post('cancelbet','MainController@cancelbet')->name('cancelbet');
 Route::post('generatepoint','MainController@generatepoint')->name('generatepoint');
-Route::get('bet_list', function (){
-  return view('frontend.bet_list');
-})->name('bet_list');
+Route::get('result','MainController@result')->name('result');
+Route::get('bet_list','MainController@bet_list')->name('bet_list');
 
-Route::get('result', function (){
-  return view('frontend.result');
-})->name('result');
+
 
 Route::get('report', function (){
   return view('frontend.report');
