@@ -58,6 +58,8 @@ class AgentController extends Controller
             $agent->address = $request->address;
             $agent->user_id=$user->id;
             $agent->points=$request->point;
+            $agent->min_point=$request->min_point;
+            $agent->max_point=$request->max_point;
             $agent->commission_rate=$request->rate;
             $agent->save();
             return redirect()->route('agents.index')->with("successMsg",'New Agent is ADDED in your data');
@@ -124,6 +126,8 @@ class AgentController extends Controller
             $agent->address = $request->address;
             $agent->user_id=$user->id;
             $agent->points=$request->point;
+            $agent->min_point=$request->min_point;
+            $agent->max_point=$request->max_point;
             $agent->commission_rate=$request->rate;
             $agent->save();
            

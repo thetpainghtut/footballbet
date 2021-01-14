@@ -30,5 +30,5 @@ class Match extends Model
 	public function result(){
 		return $this->hasOne('App\Result');
 	}
-	
+
 }

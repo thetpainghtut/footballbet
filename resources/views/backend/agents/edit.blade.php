@@ -63,6 +63,19 @@
             </div>
 
             <div class="form-group">
+              <label for="min_point">Min Points:</label>
+              <input class="form-control" id="min_point" type="number" placeholder="Enter Point" name="min_point" value="{{$agent->min_point}}">
+              <div class="form-control-feedback text-danger"> {{$errors->first('min_point') }} </div>
+            </div>
+
+            <div class="form-group">
+              <label for="max_point">Maxn Points:</label>
+              <input class="form-control" id="max_point" type="number" placeholder="Enter Point" name="max_point" value="{{$agent->max_point}}">
+              <div class="form-control-feedback text-danger"> {{$errors->first('max_point') }} </div>
+            </div>
+
+
+            <div class="form-group">
               <label for="rate">Commission Rate:</label>
               <input class="form-control" id="rate" type="text" placeholder="Enter Rate" name="rate" value="{{$agent->commission_rate}}">
               <div class="form-control-feedback text-danger"> {{$errors->first('rate') }} </div>

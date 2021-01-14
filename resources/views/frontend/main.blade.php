@@ -80,8 +80,8 @@
         </div>
       </div> --}}
       <div class="col-md-12">
-        <div class="alert alert-success" role="alert">
-          A simple success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+        <div class="alert alert-success d-none success" role="alert">
+
         </div>
       </div>
     </div>
@@ -103,6 +103,8 @@
             </tr>
           </thead>
           <tbody class="mytbody">
+            <input type="hidden" name="" value="{{Auth::user()->agent->min_point}}" class="min">
+            <input type="hidden" name="" value="{{Auth::user()->agent->max_point}}" class="max">
             @foreach($leagues as $league)
             <tr class="table-primary">
               <td colspan="8">{{$league->name}}</td>
@@ -129,11 +131,11 @@
               <td class="align-middle">{{$match->home_team->name}} - <span class="text text-danger">{{$match->away_team->name}}</span></td>
               @endif
               <td class="align-middle">({{$betrate->team_goal_different}}{{$betrate->team_bet_odd}})</td>
-              <td class="align-middle pointer">0.95</td>
-              <td class="align-middle pointer">0.95</td>
-              <td class="align-middle">({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd }})</td>
-              <td class="align-middle pointer">0.94</td>
-              <td class="align-middle pointer">0.94</td>
+              <td class="align-middle pointer" data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-status="0" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer" data-id="{{$betrate->id}}" data-status="1" data-matchid="{{$match->id}}" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle" >({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd }})</td>
+              <td class="align-middle pointer" data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-goalstatus="0" data-league="{{$match->league->name}}"data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer"  data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-status="null" data-goalstatus="1" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
             </tr>
             @endif
             @endforeach
@@ -149,8 +151,127 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $(".mytbody").on('click','.pointer',function(res){
-        $('.soccer').removeClass('d-none');
+        var bet_id=$(this).data('id');
+        var status=$(this).data("status");
+        var goalstatus=$(this).data("goalstatus");
+        var id=$(this).data("matchid");
+        var league_name=$(this).data("league");
+        var match=$(this).data("match");
+        var min_point=$(".min").val();
+        var max_point=$(".max").val();
+       // console.log(goalstatus);
+        var url="{{route('betbymatch')}}";
+        $.ajaxSetup({
+            headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+          });
+        $.post(url,{id:id},function(res){
+          //console.log(res);
+          if(bet_id==res.id){
+             $('.soccer').removeClass('d-none');
+            var html="";
+            html+=`<li class="list-group-item active"> Soccer </li>
+          <li class="list-group-item">
+            <p class="text-center">${league_name}</p>
+            <p class="mb-0">${match}</p>`
+            if(goalstatus==null){
+              if(status==0){
+                html+=`<p>Home <strong>(0.95)</strong></p>`
+              }else{
+                html+=`<p>AWAY <strong>(0.95)</strong></p>`
+              }
+            }else if(status==null){
+              if(goalstatus==0){
+                html+=`<p>goal over <strong>(0.95)</strong></p>`
+              }else{
+                html+=`<p>goal under <strong>(0.95)</strong></p>`
+              }
+            }
+            
+           html+=`<p>
+              <label>US: </label>
+              <input type="number" name="" class="userpoint">
+            </p>
+            <p class="text-center">
+              <button type="button" class="btn btn-dark btn-sm process" data-id="${bet_id}" data-bstatus="${status}" data-bgoalstatus="${goalstatus}">Process</button>
+              <button type="reset" class="btn btn-dark btn-sm">Cancel</button>
+            </p>
+          </li>
+          <li class="list-group-item p-0">
+            <table class="table table-sm table-bordered mb-0 betamounttable">
+              <tbody>
+                <tr>
+                  <td>Max Payout</td>
+                  <td class="payout"></td>
+                </tr>
+                <tr>
+                  <td>Min Bet</td>
+                  <td>${min_point}</td>
+                </tr>
+                <tr>
+                  <td>Max Bet</td>
+                  <td>${max_point}</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>`
+          $(".soccer").html(html);
+
+          }else{
+            $('.soccer').addClass('d-none');
+            alert("not match with latest bet");
+            window.location.reload();
+          }
+
+        })
+        //console.log(id)
       })
+
+      $(".soccer").on("change",".userpoint",function(){
+        var point=Number($(this).val());
+        var url="{{route('loginuser')}}";
+        $.get(url,function(res){
+          //console.log(res);
+          var pay_out=Number(point*0.95);
+          var min_point=res.min_point;
+          var max_point=res.max_point;
+         // if(point>max_point)
+         if(point>max_point){
+          alert("points are much than allow maximum points")
+          $(".soccer .userpoint").val("");
+          $(".soccer .userpoint").focus();
+         
+         }else if(point<min_point){
+           alert("points are less than allow minimum points")
+          $(".soccer .userpoint").val("");
+          $(".soccer .userpoint").focus();
+
+         }else{
+          $(".soccer .betamounttable .payout").html(point+pay_out);
+         }
+          
+        })
+      })
+
+      $(".soccer").on('click','.process',function(res){
+        //alert("ok");
+        var point=$(".soccer .userpoint").val();
+        var bet_id=$(this).data("id");
+        var bstatus=$(this).data("bstatus");
+        var bgoalstatus=$(this).data("bgoalstatus");
+        var url="{{route('matchuser')}}";
+        //console.log(point+" "+bstatus+" "+bgoalstatus);
+        $.post(url,{bet_id:bet_id,point:point,bstatus:bstatus,bgoalstatus:bgoalstatus},function(res){
+          //console.log(res);
+          if(res=="success"){
+            alert("successfully bet")
+            window.location.reload();
+          }
+        })
+
+      })
+
 
       $(".league").click(function(){
         //alert("ok");
@@ -158,10 +279,10 @@
         var url="{{route('matchbyleague')}}";
         var html=""
         $.ajaxSetup({
-        headers: {
+            headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
+              }
+          });
         $.post(url,{id:id},function(res){
           console.log(res);
           html+=``
@@ -216,16 +337,19 @@
 
 
       function tConvert (time) {
-  // Check correct time format and split into components
-      time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+          time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-        if (time.length > 1) { // If time format correct
+          if (time.length > 1) { // If time format correct
           time = time.slice (1);  // Remove full string match value
           time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
           time[0] = +time[0] % 12 || 12; // Adjust hours
           }
-      return time.join (''); // return adjusted time or original string
-    }
+        return time.join (''); // return adjusted time or original string
+      }
+
+
+
+
     });
   </script>
 @endsection

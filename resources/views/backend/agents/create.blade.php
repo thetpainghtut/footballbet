@@ -55,6 +55,20 @@
               <div class="form-control-feedback text-danger"> {{$errors->first('point') }} </div>
             </div>
 
+
+            <div class="form-group">
+              <label for="min_point">Min Points:</label>
+              <input class="form-control" id="min_point" type="number" placeholder="Enter Minimum Point" name="min_point" value="{{ old('min_point') }}">
+              <div class="form-control-feedback text-danger"> {{$errors->first('min_point') }} </div>
+            </div>
+
+
+            <div class="form-group">
+              <label for="max_point">Max Points:</label>
+              <input class="form-control" id="max_point" type="number" placeholder="Enter Maximum Point" name="max_point" value="{{ old('max_point') }}">
+              <div class="form-control-feedback text-danger"> {{$errors->first('max_point') }} </div>
+            </div>
+
             <div class="form-group">
               <label for="rate">Commission Rate:</label>
               <input class="form-control" id="rate" type="text" placeholder="Enter Rate" name="rate" value="{{ old('rate') }}">

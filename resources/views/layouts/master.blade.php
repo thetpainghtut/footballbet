@@ -59,10 +59,23 @@
           <li class="nav-item mx-md-2 {{ Request::is('report') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('report')}}">Report</a>
           </li>
-          <li class="nav-item ml-md-2">
-            {{-- <a class="nav-link" href="#">Contact</a> --}}
-            <a href="{{route('login')}}" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Sign Out</a>
-          </li>
+          <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                 </li>
         </ul>
       </div>
     </div>
@@ -76,7 +89,7 @@
       <div class="col-lg-3">
         <div class="accordion" id="accordionExample">
           <ul class="list-group my-4">
-            <li class="list-group-item d-flex justify-content-between align-items-center active" data-toggle="collapse" data-target="#collapseOne" type="button"> 50.0 USD 
+            <li class="list-group-item d-flex justify-content-between align-items-center active" data-toggle="collapse" data-target="#collapseOne" type="button"> {{ Auth::user()->agent->points }} points
               <span><i class="fas fa-plus"></i></span>
             </li>
 

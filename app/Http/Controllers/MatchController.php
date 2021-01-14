@@ -86,7 +86,17 @@ class MatchController extends Controller
      */
     public function edit($id)
     {
-        //
+        $match=Match::find($id);
+        $league_id=$match->league_id;
+        $teams=DB::table('teams')
+            ->join('team_leagues', 'teams.id', '=', 'team_leagues.team_id')
+            ->join('leagues', 'leagues.id', '=', 'team_leagues.league_id')
+            ->select('teams.*')
+            ->where('team_leagues.league_id',$league_id)
+            ->orderBy('name','asc')
+            ->get();
+        $leagues=League::orderBy('name','asc')->get();
+        return view('backend.matches.edit',compact('match','teams','leagues'));
     }
 
     /**
@@ -98,7 +108,27 @@ class MatchController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         $validator = $request->validate([
+        'league'  => ['required'],
+        'hteam'=>['required'],
+        'ateam'=>['required'],
+        'time'=>['required','date_format:H:i'],
+        'date'=>['required','date'],
+        ]);
+        if($validator){
+            $match=Match::find($id);
+            $match->league_id=$request->league;
+            $match->home_team_id=$request->hteam;
+            $match->away_team_id=$request->ateam;
+            $match->event_date=$request->date;
+            $match->event_time=$request->time;
+            $match->save();
+            return redirect()->route('matches.index')->with("successMsg",'Update Successfully');
+        }
+        else
+        {
+            return redirect::back()->withErrors($validator);
+        }
     }
 
     /**
@@ -109,7 +139,9 @@ class MatchController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $match=Match::find($id);
+        $match->delete();
+       return redirect()->route('matches.index')->with('successMsg','Existing match is DELETED in your data');
     }
 
     public function teambyleague(Request $request){
@@ -154,6 +186,7 @@ class MatchController extends Controller
 
     public function betbymatch(Request $request){
         $id=$request->id;
+        //dd($id);
         $bet=Betrate::where('match_id',$id)->latest()->first();
         return $bet;
     }

@@ -19,7 +19,9 @@ class CreateAgentsTable extends Migration
             $table->string('phone_no');
             $table->text('address');
             $table->integer('points');
-            $table->string('commission_rate');
+            $table->integer('min_point')->nullable();
+            $table->integer('max_point')->nullable();
+            $table->string('commission_rate')->default(0);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('user_id')

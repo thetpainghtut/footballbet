@@ -13,6 +13,9 @@
               </button>
           </div>
         @endif
+        <div class="col-12">
+            <div class="alert alert-primary success d-none" role="alert"></div>
+        </div>
         <div class="col-lg-12 mb-4">
           <div class="card">
             <div class="card-header">
@@ -48,12 +51,23 @@
                     <td>{{$row->event_date}}</td>
                     <td>{{ $event_time}}</td>
                     <td>{{$row->league->name}}</td>
+                    <td>
+                    <a href="#" class="btn btn-light btn-dark result" data-match="{{$row->home_team->name}}-{{$row->away_team->name}}" data-id="{{$row->id}}">Add Result</a>
+                    <a href="{{route('matches.edit',$row->id)}}" class="btn btn-sm btn-warning">Edit</a>
+                    <form action="{{ route('matches.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
+
+                      @csrf
+                      @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
                     @if(count($row->betrates)>0)
-                    <td><a href="#" class="btn btn-primary btn-sm changebet" data-id="{{$row->id}}">Channge bet</a><a href="{{route('viewbet',$row->id)}}" class="btn btn-success btn-sm view mx-1">View bet</a></td>
+                    <a href="#" class="btn btn-primary btn-sm changebet" data-id="{{$row->id}}">Channge bet</a>
+                    <a href="{{route('viewbet',$row->id)}}" class="btn btn-success btn-sm view mx-1">View bet</a>
                     
                     @else
-                    <td><a href="#" class="btn btn-info btn-sm addbet" data-id="{{$row->id}}">Add bet</a></td>
+                    <a href="#" class="btn btn-info btn-sm addbet" data-id="{{$row->id}}">Add bet</a>
                     @endif
+                  </td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -243,6 +257,44 @@
       </form>
     </div>
   </div>
+
+  {{-- result modal --}}
+  <div class="modal fade" id="resultmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <input type="hidden" name="" id="resultmatch">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="h_goal">Home Team goal</label>
+                <span class="Ehteam error d-block" ></span>
+                <input type="number" class="form-control" id="h_goal" name="h_goal">
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="a_goal">Away Team goal</label>
+                <span class="Eateam error d-block" ></span>
+                <input type="number" class="form-control" id="a_goal" name="a_goal">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-save">Save</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
 @endsection
 @section('script')
 <script type="text/javascript">
@@ -266,7 +318,6 @@
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
-
       $.post(url,{id:id},function(res){
         //console.log(res)
         var rate=res.team_bet_odd;
@@ -301,6 +352,63 @@
 
 
       })
+    })
+
+
+    $(".result").click(function(){
+        var match=$(this).data('match');
+        console.log(match);
+        var id=$(this).data('id');
+        $("#resultmodal #exampleModalLabel").html(match);
+        $("#resultmodal #resultmatch").val(id);
+        $("#resultmodal").modal('show');
+       
+     })
+
+    $(".btn-save").click(function(){
+      //alert("ok");
+      var match_id=$("#resultmatch").val();
+      var h_goal=$("#h_goal").val();
+      var a_goal=$("#a_goal").val();
+      var url="{{route('storeresult')}}";
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+         $.ajax({
+          url:url,
+          type:"post",
+          data:{match_id:match_id,h_goal:h_goal,a_goal:a_goal},
+          dataType:'json',
+          success:function(response){
+            if(response.success){
+              $("#resultmodal").modal('hide');
+               $('.Ehteam').text('');
+              $('span.error').removeClass('text-danger');
+              $('.Eateam').text('');
+              $('.success').removeClass('d-none');
+              $('.success').show();
+              $('.success').text('successfully added');
+              $('.success').fadeOut(3000);
+              window.location.reload();      
+            }
+          },
+          error:function(error){
+            var errors=error.responseJSON.errors;
+            //console.log(error.responseJSON.errors);
+            if(errors){
+              var hteam=errors.h_goal;
+              var ateam=errors.a_goal;
+              $('.Ehteam').text(hteam);
+              $('span.error').addClass('text-danger');
+              $('.Eateam').text(ateam);
+            }
+
+          }
+          
+
+        })
     })
 
   })
