@@ -54,7 +54,7 @@
 
                   
                   @if($betrate->match->result==null)
-                  <td>--</td>
+                  <td><span class="badge badge-info">match does not end</span></td>
                   @else
                   <td>
                     @if($betrate->pivot->betting_total_goal_status===null)
