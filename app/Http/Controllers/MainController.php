@@ -244,7 +244,7 @@ class MainController extends Controller
     }
 
     public function result(){
-        $results=League::with('matches')->get();
+        $results=League::whereHas('matches')->get();
         return view('frontend.result',compact('results'));
     }
 
@@ -255,7 +255,12 @@ class MainController extends Controller
         $agent=Agent::with('betrates.match.result')->whereHas('betrates')->where('id',$id)->first();
         //dd($agent);
         return view('frontend.bet_list',compact('agent'));
+    }
 
+    public function pagereload($value='')
+    {
+        $matches=Match::with('league')->with('betrates')->with('home_team')->with('away_team')->get();
+        return $matches;
     }
 
 }

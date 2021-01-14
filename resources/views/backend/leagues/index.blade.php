@@ -17,7 +17,7 @@
           <div class="card">
             <div class="card-header">
               <h6 class="text-uppercase mb-0 d-inline-block">League List</h6>
-              <a href="{{route('leagues.create')}}" class="btn btn-primary float-right">Add </a>
+              <a href="{{route('leagues.create')}}" class="btn btn-sm btn-primary float-right">Add </a>
             </div>
             <div class="card-body">
               <table class="table table-bordered">
@@ -33,16 +33,16 @@
                   @php $i=1; @endphp
                   @foreach($leagues as $row)
                   <tr>
-                    <th scope="row">{{$i++}}</th>
-                    <td>{{$row->name}}</td>
-                    <td>{{$row->country}}</td>
-                    <td>
-                      <a href="{{route('leagues.edit',$row->id)}}" class="btn btn-warning">Edit</a>
+                    <td scope="row" class="align-middle">{{$i++}}</td>
+                    <td class="align-middle">{{$row->name}}</td>
+                    <td class="align-middle">{{$row->country}}</td>
+                    <td class="align-middle">
+                      <a href="{{route('leagues.edit',$row->id)}}" class="btn btn-sm btn-warning">Edit</a>
                     <form action="{{ route('leagues.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
 
                       @csrf
                       @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </td>
                   </tr>

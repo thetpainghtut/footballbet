@@ -14,19 +14,21 @@
             @csrf
             <div class="form-group">
               <label for="team">Name:</label>
-              <input class="form-control" id="team" type="text" placeholder="Enter name" name="name" value="{{ old('name') }}">
+              <input class="form-control w-50" id="team" type="text" placeholder="Enter name" name="name" value="{{ old('name') }}">
               <div class="form-control-feedback text-danger"> {{$errors->first('name') }} </div>
             </div>
 
             <div class="form-group">
               <label for="league">{{ __("Team Leagues")}}:</label>
-              <select class="js-example-basic-multiple form-control" name="league[]" multiple="multiple" id="league">
-                <option value="">{{{ __("Choose leagues")}}}</option>
-                @foreach($leagues as $row)
-                <option value="{{$row->id}}">{{$row->name}}</option>
-                @endforeach
-                 
-              </select>
+              <div>
+                <select class="js-example-basic-multiple form-control w-50 d-block" name="league[]" multiple="multiple" id="league">
+                  <option value="">{{{ __("Choose leagues")}}}</option>
+                  @foreach($leagues as $row)
+                  <option value="{{$row->id}}">{{$row->name}}</option>
+                  @endforeach
+                   
+                </select>
+              </div>
               <div class="form-control-feedback text-danger"> {{$errors->first('league') }} </div>
             </div>
 

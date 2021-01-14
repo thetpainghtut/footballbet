@@ -40,13 +40,13 @@
                   @endphp
                   @foreach($results as $row)
                   <tr>
-                    <td>{{$i++}}</td>
-                    <td>{{$row->match->home_team->name}}-{{$row->match->away_team->name}}</td>
-                    <td>{{$row->home_team_score}}</td>
-                    <td>{{$row->away_team_score}}</td>
-                    <td>{{$row->match->league->name}}</td>
-                    <td>{{$row->match->event_date}}</td>
-                    <td><a href="#" class="btn btn-warning btnedit" data-id="{{$row->id}}" data-match="{{$row->match->home_team->name}}-{{$row->match->away_team->name}}">Edit</a>
+                    <td class="align-middle">{{$i++}}</td>
+                    <td class="align-middle">{{$row->match->home_team->name}}-{{$row->match->away_team->name}}</td>
+                    <td class="align-middle">{{$row->home_team_score}}</td>
+                    <td class="align-middle">{{$row->away_team_score}}</td>
+                    <td class="align-middle">{{$row->match->league->name}}</td>
+                    <td class="align-middle">{{$row->match->event_date}}</td>
+                    <td class="align-middle"><a href="#" class="btn btn-warning btnedit" data-id="{{$row->id}}" data-match="{{$row->match->home_team->name}}-{{$row->match->away_team->name}}">Edit</a>
                       @if($row->match_status==1)
                       <button class="btn btn-info btn-sm gentratepoint" data-id="{{$row->id}}" >generate point</button></td>
                       @else

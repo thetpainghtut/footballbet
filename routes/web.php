@@ -22,6 +22,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('main','MainController@main')->name('main');
+Route::get('pagereload','MainController@pagereload')->name('pagereload');
+
 Route::post('matchbyleague','MainController@matchbyleague')->name('matchbyleague');
 Route::get('loginuser','MainController@loginuser')->name('loginuser');
 Route::post('matchuser','MainController@matchuser')->name('matchuser');
@@ -31,8 +33,6 @@ Route::post('cancelbet','MainController@cancelbet')->name('cancelbet');
 Route::post('generatepoint','MainController@generatepoint')->name('generatepoint');
 Route::get('result','MainController@result')->name('result');
 Route::get('bet_list','MainController@bet_list')->name('bet_list');
-
-
 
 Route::get('report', function (){
   return view('frontend.report');
@@ -49,14 +49,15 @@ Route::get('dashboard', function (){
 
 
 Route::prefix('master')->group(function () {
-Route::resource('agents','AgentController');
-Route::resource('leagues','LeagueController');
-Route::resource('teams','TeamController');
-Route::resource('matches','MatchController');
-Route::resource('results','ResultController');
+  Route::resource('agents','AgentController');
+  Route::resource('leagues','LeagueController');
+  Route::resource('teams','TeamController');
+  Route::resource('matches','MatchController');
+  Route::get('matches/viewbet/{id}','MatchController@viewbet')->name('viewbet');
+
+  Route::resource('results','ResultController');
 });
 Route::post('teambyleague','MatchController@teambyleague')->name('teambyleague');
 Route::post('storebet','MatchController@storebet')->name('storebet');
 Route::post('betbymatch','MatchController@betbymatch')->name('betbymatch');
-Route::get('viewbet/{id}','MatchController@viewbet')->name('viewbet');
 });

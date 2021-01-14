@@ -33,22 +33,22 @@
                   @php $i=1; @endphp
                   @foreach($teams as $row)
                   <tr>
-                    <th scope="row">{{$i++}}</th>
-                    <td>{{$row->name}}</td>
-                    <td>
-                     @foreach($row->leagues as $league)
-                      <span class="badge badge-info">{{$league->name}}</span>
-                    @endforeach
-                  </td>
-                    <td>
+                    <td scope="row" class="align-middle">{{$i++}}</td>
+                    <td class="align-middle">{{$row->name}}</td>
+                    <td class="align-middle">
+                      @foreach($row->leagues as $league)
+                        <span class="badge badge-info">{{$league->name}}</span>
+                      @endforeach
+                    </td>
+                    <td class="align-middle">
                       <a href="{{route('teams.edit',$row->id)}}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('teams.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
+                      <form action="{{ route('teams.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
 
-                      @csrf
-                      @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                      </form>
+                    </td>
                   </tr>
                   @endforeach
                   

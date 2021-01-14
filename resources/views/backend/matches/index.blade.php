@@ -45,14 +45,18 @@
                   $event_time=date("h:i A",strtotime($time));
                   @endphp
                   <tr>
-                    <td>{{$i++}}</td>
-                    <td>{{$row->home_team->name}}</td>
-                    <td>{{$row->away_team->name}}</td>
-                    <td>{{$row->event_date}}</td>
-                    <td>{{ $event_time}}</td>
-                    <td>{{$row->league->name}}</td>
-                    <td>
-                    <a href="#" class="btn btn-light btn-dark result" data-match="{{$row->home_team->name}}-{{$row->away_team->name}}" data-id="{{$row->id}}">Add Result</a>
+                    <td class="align-middle">{{$i++}}</td>
+                    <td class="align-middle">{{$row->home_team->name}}</td>
+                    <td class="align-middle">{{$row->away_team->name}}</td>
+                    <td class="align-middle">{{Carbon\Carbon::parse($row->event_date)->format('d-m-Y')}}</td>
+                    <td class="align-middle">{{ $event_time}}</td>
+                    <td class="align-middle">{{$row->league->name}}</td>
+                    <td class="align-middle">
+
+                    @if(isset($row->betrates) && count($row->betrates)>0)
+                    <a href="#" class="btn btn-dark result" data-match="{{$row->home_team->name}}-{{$row->away_team->name}}" data-id="{{$row->id}}">Add Result</a>
+                    @endif
+
                     <a href="{{route('matches.edit',$row->id)}}" class="btn btn-sm btn-warning">Edit</a>
                     <form action="{{ route('matches.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
 
@@ -65,7 +69,7 @@
                     <a href="{{route('viewbet',$row->id)}}" class="btn btn-success btn-sm view mx-1">View bet</a>
                     
                     @else
-                    <a href="#" class="btn btn-info btn-sm addbet" data-id="{{$row->id}}">Add bet</a>
+                    <a href="#" class="btn btn-info btn-sm addbet" data-id="{{$row->id}}">Add Bet</a>
                     @endif
                   </td>
                   </tr>
@@ -81,7 +85,7 @@
 
   <!-- Modal -->
   <div class="modal fade" id="addbetmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Bet Rate</h5>
@@ -93,10 +97,13 @@
           <form method="post" action="{{route('storebet')}}">
             @csrf
           <input type="hidden" id="match_id" name="match_id">
-          <div class="form-row">
-            <div class="col-12">
-              <h6 class="text text-dark">Noraml Bet</h6>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-12">
+                <h6 class="text text-danger">Noraml Bet</h6>
+              </div>
             </div>
+
             <div class="row">
               <div class="form-group col-md-4">
                 <label for="normalbet">Goal different</label>
@@ -133,31 +140,30 @@
             </div>
           </div>
           <hr>
-          <div class="form-row">
-
+          <div class="row">
             <div class="col-12">
-              <h6 class="text text-dark">Goal Over and under Bet</h6>
+              <h6 class="text text-danger">Goal Over and under Bet</h6>
             </div>
-            <div class="row">
-              <div class="form-group col-md-4">
-                <label for="overunderbet">Goal different</label>
-                <input type="number" class="form-control" name="overunderbet" id="overunderbet">
-              </div>
-              <div class="form-group col-md-4">
-                <label for="overundersign">Sign</label>
-                <select class="form-control" id="overundersign" name="overundersign">
-                  <option value="">Choose Sign</option>
-                  <option value="+">+</option>
-                  <option value="-">-</option>
-                  <option value="=">=</option>
-                </select>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="obet">Team bet odd</label>
-                <input type="number" class="form-control" id="obet" name="obet">
-              </div>
-            </div>
+          </div>
             
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="overunderbet">Goal different</label>
+              <input type="number" class="form-control" name="overunderbet" id="overunderbet">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="overundersign">Sign</label>
+              <select class="form-control" id="overundersign" name="overundersign">
+                <option value="">Choose Sign</option>
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="=">=</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="obet">Team bet odd</label>
+              <input type="number" class="form-control" id="obet" name="obet">
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -170,7 +176,7 @@
   </div>
 
   <div class="modal fade" id="changebetmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Change Bet Rate</h5>
@@ -178,13 +184,14 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <form method="post" action="{{route('storebet')}}">
+        <form method="post" action="{{route('storebet')}}">
+          <div class="modal-body">
             @csrf
-          <input type="hidden" id="cmatch_id" name="match_id">
-          <div class="form-row">
-            <div class="col-12">
-              <h6 class="text text-dark">Noraml Bet</h6>
+            <input type="hidden" id="cmatch_id" name="match_id">
+            <div class="row">
+              <div class="col-12">
+                <h6 class="text text-danger">Noraml Bet</h6>
+              </div>
             </div>
             <div class="row">
               <div class="form-group col-md-4">
@@ -205,7 +212,6 @@
                 <input type="number" class="form-control" id="cbet" name="bet">
               </div>
             </div>
-
             <div class="row">
               <div class="col-6">
                 <div class="form-check form-check-inline">
@@ -220,12 +226,11 @@
               </div>
               </div> 
             </div>
-          </div>
-          <hr>
-          <div class="form-row">
-
-            <div class="col-12">
-              <h6 class="text text-dark">Goal Over and under Bet</h6>
+            <hr>
+            <div class="row">
+              <div class="col-12">
+                <h6 class="text text-danger">Goal Over and under Bet</h6>
+              </div>
             </div>
             <div class="row">
               <div class="form-group col-md-4">
@@ -246,15 +251,13 @@
                 <input type="number" class="form-control" id="cobet" name="obet">
               </div>
             </div>
-            
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
       </div>
-      </form>
     </div>
   </div>
 

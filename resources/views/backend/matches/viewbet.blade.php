@@ -47,21 +47,21 @@
                   $latest_time=date("h:i A",strtotime($time));
                   @endphp
                   <tr>
-                    <td>{{$i++}}</td>
+                    <td class="align-middle">{{$i++}}</td>
                      @if($row->odd_team_status==0)
-                    <td>
+                    <td class="align-middle">
                      <span class="text-danger">{{$row->match->home_team->name}}</span>
                       -{{$row->match->away_team->name}}
                     </td>
                     @else
-                    <td>
+                    <td class="align-middle">
                       {{$row->match->home_team->name}}-<span class="text-danger">{{$row->match->away_team->name}}</span>
                     </td>
                     @endif
-                    <td>({{$row->team_goal_different}}{{$row->team_bet_odd}})</td>
-                    <td>({{$row->team_goal}}{{$row->team_goal_bet_odd }})</td>
-                    <td>{{$row->created_at->toDateString()}}</td>
-                    <td>{{$latest_time}}</td>
+                    <td class="align-middle">({{$row->team_goal_different}}{{$row->team_bet_odd}})</td>
+                    <td class="align-middle">({{$row->team_goal}}{{$row->team_goal_bet_odd }})</td>
+                    <td class="align-middle">{{Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
+                    <td class="align-middle">{{$latest_time}}</td>
                     </tr>
                   @endforeach
                 </tbody>
