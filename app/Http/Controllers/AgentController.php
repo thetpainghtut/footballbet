@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Agent;
 use Illuminate\Support\Facades\Hash;
+use Auth;
+use App\TransationPoint;
 class AgentController extends Controller
 {
     /**
@@ -62,6 +64,15 @@ class AgentController extends Controller
             $agent->max_point=$request->max_point;
             $agent->commission_rate=$request->rate;
             $agent->save();
+            $master = Auth::user();
+            $master_id=$user->id;
+            $transation=New TransationPoint;
+            $transation->from=$master_id;
+            $transation->to=$agent->user_id;
+            $transation->transation_type_id=5;
+            $transation->points=$agent->points;
+            $transation->description="opening point";
+            $transation->save();
             return redirect()->route('agents.index')->with("successMsg",'New Agent is ADDED in your data');
         }else{
              return redirect::back()->withErrors($validator);

@@ -18,7 +18,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @php $i=1; @endphp
+                  @php $i=1;$totalpoint=0; @endphp
                   @foreach($agent->betrates as $betrate)
                   <tr>
                   <td>{{$i++}}</th>
@@ -69,8 +69,7 @@
                         }else{
                           $winloosepoint+=$betrate->pivot->goal_different_equal;
                         }
-                     
-
+                       $totalpoint+=$winloosepoint; 
                       @endphp
                      {{$winloosepoint}}
                       
@@ -86,8 +85,7 @@
                         }else{
                           $winloosepoint+=$betrate->pivot->goal_different_equal;
                         }
-                     
-
+                        $totalpoint+=$winloosepoint; 
                       @endphp
                      {{$winloosepoint}}
                     
@@ -99,6 +97,7 @@
 
                   </tr>
                   @endforeach
+                  <tr><td colspan="6">totalpoint</td><td>{{$totalpoint}}</td></tr>
                 </tbody>
               </table>
     </div>

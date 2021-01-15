@@ -136,6 +136,13 @@ class MainController extends Controller
         $agent=Agent::find($id);
         $agent->points=$agent->points-$p;
         $agent->save();
+        $transation=New TransationPoint;
+        $transation->from=$user->id;
+        $transation->to=1;
+        $transation->transation_type_id=3;
+        $transation->points=$p;
+        $transation->description="bet point";
+        $transation->save();
         return "success";
     }
 
@@ -200,6 +207,15 @@ class MainController extends Controller
         $agent->points+=$addingpoints;
         $agent->save();
         $agent->betrates()->wherePivot('created_at','=',$id)->detach();
+        $user = Auth::user();
+        $master_id=$user->id;
+        $transation=New TransationPoint;
+        $transation->from=$master_id;
+        $transation->to=$agent->user_id;
+        $transation->transation_type_id=3;
+        $transation->points=$addingpoints;
+        $transation->description="cancel point";
+        $transation->save();
         return "success";
 
     }
