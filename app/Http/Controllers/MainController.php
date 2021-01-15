@@ -21,7 +21,7 @@ class MainController extends Controller
     	$leagues=League::whereHas('matches',function($query){
     		$query->whereHas('betrates');
     	})->get();
-    	//dd($matches);
+    	//dd($leagues);
     	return view('frontend.main',compact('leagues'));
     }
 
@@ -227,7 +227,7 @@ class MainController extends Controller
         //dd($id);
         $result=Result::find($id);
         $match_id=$result->match_id;
-        //dd($match_id);
+       // dd($match_id);
 
 
         $agentbetrates=DB::table('agent_betrate')
@@ -236,10 +236,11 @@ class MainController extends Controller
             ->select('betrates.*','agent_betrate.*')
             ->get();
         //dd($agents);
-        $winloosepoint=0;
+                $winloosepoint=0;
 
 
             foreach ($agentbetrates as $betrate) {
+                if($match_id==$betrate->match_id){
                 if($betrate->betting_total_goal_status===null){ 
                       $team_goal_different=$betrate->team_goal_different;
                       $bteam_goal_different=$result->home_team_score-$result->away_team_score;
@@ -265,8 +266,15 @@ class MainController extends Controller
                     
                 }
 
-                $agent=Agent::find($betrate->agent_id);
-           
+                    $agent=Agent::find($betrate->agent_id);
+                    $agentpoint=$agent->points;
+                    $betpoint=$betrate->bet_amount;
+                    $beforebetpoint=$agentpoint+$betpoint;
+                    //dd($beforebetpoint);
+                    $afterpoint=$beforebetpoint+$winloosepoint;
+                    //dd($afterpoint);
+                    $agent->points=$afterpoint;
+                    $agent->save();
                     $transation=New TransationPoint;
                     $transation->from=$master_id;
                     $transation->to=$agent->user_id;
@@ -278,7 +286,7 @@ class MainController extends Controller
                     $result->match_status=2;
                     $result->save();
         }
-
+    }
 
         return "success";
 

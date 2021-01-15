@@ -49,7 +49,7 @@
                     <td class="align-middle">
                       @if($row->match_status==1)
                       <a href="#" class="btn btn-warning btnedit" data-id="{{$row->id}}" data-match="{{$row->match->home_team->name}}-{{$row->match->away_team->name}}">Edit</a>
-                      <button class="btn btn-info btn-sm gentratepoint" data-id="{{$row->id}}" >generate point</button>
+                      <button class="btn btn-info btn-sm gentratepoint" data-id="{{$row->id}}">generate point</button>
                       @else
                       <button class="btn btn-success btn-sm" >generate complete</button>
                       @endif
