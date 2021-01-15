@@ -158,7 +158,7 @@
                     
                   </tr>
                   @endforeach
-                  <tr><td colspan="7">totalpoint</td><td colspan="2" style="text-align: center">{{$totalpoint}}</td></tr>
+                  <tr><td colspan="7">totalpoint</td><td colspan="2">{{$totalpoint}}</td></tr>
                   @endforeach
                 </tbody>
               </table>
