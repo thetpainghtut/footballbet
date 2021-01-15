@@ -28,14 +28,14 @@
                   <td class="align-middle">{{$betrate->match->home_team->name}} - <span class="text text-danger">{{$betrate->match->away_team->name}}</span></td>
                   @endif
                   <td>
-                    @if($betrate->pivot->betting_total_goal_status===null)
-                      @if($betrate->pivot->betting_team_status===0)
+                    @if(is_null($betrate->pivot->betting_total_goal_status))
+                      @if($betrate->pivot->betting_team_status==0)
                         Home
                       @else
                         Away
                       @endif
-                    @elseif($betrate->pivot->betting_team_status===null)
-                      @if($betrate->pivot->betting_total_goal_status!==0)
+                    @elseif(is_null($betrate->pivot->betting_team_status))
+                      @if($betrate->pivot->betting_total_goal_status!=0)
                         Goal Under
                       @else
                         Goal Over
@@ -44,7 +44,7 @@
                   </td>
                   <td>{{$agent->commission_rate}}</td>
                   <td>
-                    @if($betrate->pivot->betting_total_goal_status===null)
+                    @if(is_null($betrate->pivot->betting_total_goal_status))
                     ({{$betrate->team_goal_different}}{{$betrate->team_bet_odd}})
                     @else
                     ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
