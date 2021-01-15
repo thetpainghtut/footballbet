@@ -30,7 +30,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-10 col-xl-7 mx-auto">
-                                <h3 class="display-4 text-success">959 Green!</h3>
+                                <h3 class="display-4 text-success">9 Bet!</h3>
                                 <p class="text-muted mb-4">Please login for betting all football sports.</p>
                                 <form method="POST" action="{{ route('login') }}" class="loginform">
                                     @csrf
