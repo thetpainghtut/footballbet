@@ -53,14 +53,14 @@
                   @php $totalpoint=0; @endphp
                   @foreach($agent->betrates as $betrate)
                   <tr>
-                  <td>{{$i++}}</th>
-                  <td>{{$agent->user->name}}</td>
+                  <td class="align-middle">{{$i++}}</th>
+                  <td class="align-middle">{{$agent->user->name}}</td>
                   @if($betrate->odd_team_status==0)
                   <td class="align-middle"><span class="text text-danger">{{$betrate->match->home_team->name}}</span> - {{$betrate->match->away_team->name}}</td>
                   @else
                   <td class="align-middle">{{$betrate->match->home_team->name}} - <span class="text text-danger">{{$betrate->match->away_team->name}}</span></td>
                   @endif
-                  <td>
+                  <td class="align-middle">
                     @if($betrate->pivot->betting_total_goal_status===null)
                       @if($betrate->pivot->betting_team_status===0)
                         Home
@@ -75,21 +75,21 @@
                       @endif
                     @endif
                   </td>
-                  <td>{{$agent->commission_rate}}</td>
-                  <td>
+                  <td class="align-middle">{{$agent->commission_rate}}</td>
+                  <td class="align-middle">
                     @if($betrate->pivot->betting_total_goal_status===null)
                     ({{$betrate->team_goal_different}}{{$betrate->team_bet_odd}})
                     @else
                     ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
                     @endif
                   </td>
-                  <td>{{$betrate->pivot->bet_amount}}</td>
+                  <td class="align-middle">{{$betrate->pivot->bet_amount}}</td>
 
                   
                   @if($betrate->match->result==null)
-                  <td>-</td>
+                  <td class="align-middle">-</td>
                   @else
-                  <td>
+                  <td class="align-middle">
                     @if($betrate->pivot->betting_total_goal_status===null)
                       @php 
                       $team_goal_different=$betrate->team_goal_different;
@@ -129,7 +129,7 @@
                   </td>
                   @endif
                   
-                  <td><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->pivot->created_at}}" data-agentid="{{$agent->id}}">cancel</a></td>
+                  <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->pivot->created_at}}" data-agentid="{{$agent->id}}">cancel</a></td>
 
                   </tr>
                   @endforeach

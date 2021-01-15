@@ -15,7 +15,7 @@
             @method('PUT')
             <div class="form-group">
               <label for="team">Name:</label>
-              <input class="form-control" id="team" type="text" placeholder="Enter name" name="name" value="{{$team->name}}">
+              <input class="form-control w-50" id="team" type="text" placeholder="Enter name" name="name" value="{{$team->name}}">
               <div class="form-control-feedback text-danger"> {{$errors->first('name') }} </div>
             </div>
 
@@ -24,22 +24,24 @@
               @php
               $v = $team->leagues;
               @endphp
-              <select class="js-example-basic-multiple form-control" name="league[]" multiple="multiple" id="league">
-                <option>{{ __("Choose leagues")}}</option>
-                @foreach($leagues as $row)
-                <option value="{{$row->id}}"  @foreach($v as $key=> $value)
+              <div>
+                <select class="js-example-basic-multiple form-control w-50" name="league[]" multiple="multiple" id="league">
+                  <option>{{ __("Choose leagues")}}</option>
+                  @foreach($leagues as $row)
+                  <option value="{{$row->id}}"  @foreach($v as $key=> $value)
 
-                  @if($row->id==$value->pivot->league_id) {{"selected"}} @endif 
-                  @endforeach>{{$row->name}}</option>
-                @endforeach
-                 
-              </select>
+                    @if($row->id==$value->pivot->league_id) {{"selected"}} @endif 
+                    @endforeach>{{$row->name}}</option>
+                  @endforeach
+                   
+                </select>
+              </div>
               <div class="form-control-feedback text-danger"> {{$errors->first('league') }} </div>
             </div>
            
 
             <div class="form-group">
-              <button class="btn btn-primary" type="submit">Save</button>
+              <button class="btn btn-primary" type="submit">Update</button>
             </div>
           </form>
             </div>

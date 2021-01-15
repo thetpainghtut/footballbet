@@ -11,80 +11,88 @@
             </div>
             <div class="card-body">
               <form action="{{route('agents.update',$agent->id)}}" method="POST">
-             @csrf
-            @method('PUT')
-            <input type="hidden" name="oldpassword" value="{{$agent->user->password}}">
-            <div class="form-group">
-              <label for="InputCityName">Name:</label>
-              <input class="form-control" id="InputCityName" type="text" placeholder="Enter name" name="name" value="{{$agent->user->name}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('name') }} </div>
-            </div>
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="oldpassword" value="{{$agent->user->password}}">
+                <div class="form-group row">
+                  <div class="col">
+                    <label for="InputCityName">Name:</label>
+                    <input class="form-control" id="InputCityName" type="text" placeholder="Enter name" name="name" value="{{$agent->user->name}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('name') }} </div>
+                  </div>
 
-            <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email" value="{{$agent->user->email}}">
-              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-              <div class="form-control-feedback text-danger"> {{$errors->first('email') }} </div>
-            </div>
+                  <div class="col">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email" value="{{$agent->user->email}}">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <div class="form-control-feedback text-danger"> {{$errors->first('email') }} </div>
+                  </div>
+                </div>
 
-           <div class="form-group">
-              <input type="checkbox" class="mychangepsw" id="cpassw">
-              <label for="cpassw">Want to change password?</label>
-            </div>
+                <div class="form-group">
+                  <input type="checkbox" class="mychangepsw" id="cpassw">
+                  <label for="cpassw">Want to change password?</label>
+                </div>
 
-            <div class="form-group psw">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Enter Password">
-              <div class="form-control-feedback text-danger"> {{$errors->first('password') }} </div>
-            </div>
+                <div class="form-group row">
+                  <div class="col psw">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Enter Password">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('password') }} </div>
+                  </div>
 
-            <div class="form-group cpsw">
-              <label for="password-confirm">Confirm Password</label>
-               <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
-              
-            </div>
+                  <div class="col cpsw">
+                    <label for="password-confirm">Confirm Password</label>
+                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+                  </div>
+                </div>
+                
+                <div class="form-group row">
+                  <div class="col">
+                    <label for="phone">Phone No:</label>
+                    <input class="form-control" id="phone" type="text" placeholder="Enter Phone No" name="phone" value="{{$agent->phone_no}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('phone') }} </div>
+                  </div>
 
-            <div class="form-group">
-              <label for="phone">Phone No:</label>
-              <input class="form-control" id="phone" type="text" placeholder="Enter Phone No" name="phone" value="{{$agent->phone_no}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('phone') }} </div>
-            </div>
+                  <div class="col">
+                    <label for="address">Address:</label>
+                    <input class="form-control" id="address" type="text" placeholder="Enter Address" name="address" value="{{$agent->address}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('address') }} </div>
+                  </div>
+                </div>
 
-            <div class="form-group">
-              <label for="address">Address:</label>
-              <input class="form-control" id="address" type="text" placeholder="Enter Address" name="address" value="{{$agent->address}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('address') }} </div>
-            </div>
+                <div class="form-group row">
+                  <div class="col">
+                    <label for="point">Points:</label>
+                    <input class="form-control" id="point" type="number" placeholder="Enter Point" name="point" value="{{$agent->points}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('point') }} </div>
+                  </div>
 
-            <div class="form-group">
-              <label for="point">Points:</label>
-              <input class="form-control" id="point" type="number" placeholder="Enter Point" name="point" value="{{$agent->points}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('point') }} </div>
-            </div>
+                  <div class="col">
+                    <label for="rate">Commission Rate:</label>
+                    <input class="form-control" id="rate" type="text" placeholder="Enter Rate" name="rate" value="{{$agent->commission_rate}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('rate') }} </div>
+                  </div>
+                </div>
 
-            <div class="form-group">
-              <label for="min_point">Min Points:</label>
-              <input class="form-control" id="min_point" type="number" placeholder="Enter Point" name="min_point" value="{{$agent->min_point}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('min_point') }} </div>
-            </div>
+                <div class="form-group row">
+                  <div class="col">
+                    <label for="min_point">Min Points:</label>
+                    <input class="form-control" id="min_point" type="number" placeholder="Enter Point" name="min_point" value="{{$agent->min_point}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('min_point') }} </div>
+                  </div>
 
-            <div class="form-group">
-              <label for="max_point">Maxn Points:</label>
-              <input class="form-control" id="max_point" type="number" placeholder="Enter Point" name="max_point" value="{{$agent->max_point}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('max_point') }} </div>
-            </div>
+                  <div class="col">
+                    <label for="max_point">Maxn Points:</label>
+                    <input class="form-control" id="max_point" type="number" placeholder="Enter Point" name="max_point" value="{{$agent->max_point}}">
+                    <div class="form-control-feedback text-danger"> {{$errors->first('max_point') }} </div>
+                  </div>
+                </div>
 
-
-            <div class="form-group">
-              <label for="rate">Commission Rate:</label>
-              <input class="form-control" id="rate" type="text" placeholder="Enter Rate" name="rate" value="{{$agent->commission_rate}}">
-              <div class="form-control-feedback text-danger"> {{$errors->first('rate') }} </div>
-            </div>
-
-            <div class="form-group">
-              <button class="btn btn-primary" type="submit">Save</button>
-            </div>
-          </form>
+                <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

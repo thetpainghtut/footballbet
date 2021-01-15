@@ -98,7 +98,7 @@
               
           <li class="sidebar-list-item"><a href="{{route('leagues.index')}}" class="sidebar-link text-muted {{ Request::is('master/leagues*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Leagues</span></a></li>
           <li class="sidebar-list-item"><a href="{{route('teams.index')}}" class="sidebar-link text-muted {{ Request::is('master/teams*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Teams</span></a></li>
-          <li class="sidebar-list-item"><a href="{{route('matches.index')}}" class="sidebar-link text-muted {{ Request::is('matches*') ? 'active' : '' }}"><i class="o-table-content-1 mr-3 text-gray"></i><span>Matches</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('matches.index')}}" class="sidebar-link text-muted {{ Request::is('master/matches*') ? 'active' : '' }}"><i class="o-table-content-1 mr-3 text-gray"></i><span>Matches</span></a></li>
           <li class="sidebar-list-item"><a href="{{route('bets.index')}}" class="sidebar-link text-muted {{ Request::is('bets*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Bets</span></a></li>
               
             

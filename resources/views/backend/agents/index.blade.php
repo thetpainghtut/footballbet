@@ -28,6 +28,8 @@
                     <th>Phone No</th>
                     <th>Points</th>
                     <th>Commission Rate</th>
+                    <th>Min Points</th>
+                    <th>Max Points</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -35,20 +37,22 @@
                   @php $i=1; @endphp
                   @foreach($agents as $row)
                   <tr>
-                    <td>{{$i++}}</td>
-                    <td>{{$row->user->name}}</td>
-                    <td>{{$row->phone_no}}</td>
-                    <td>{{$row->points}}</td>
-                    <td>{{$row->commission_rate}}</td>
-                    <td>
+                    <td class="align-middle">{{$i++}}</td>
+                    <td class="align-middle">{{$row->user->name}}</td>
+                    <td class="align-middle">{{$row->phone_no}}</td>
+                    <td class="align-middle">{{$row->points}}</td>
+                    <td class="align-middle">{{$row->commission_rate}}</td>
+                    <td class="align-middle">{{$row->min_point}}</td>
+                    <td class="align-middle">{{$row->max_point}}</td>
+                    <td class="align-middle">
                       <a href="{{route('agents.edit',$row->id)}}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('agents.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
+                      <form action="{{ route('agents.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
 
-                      @csrf
-                      @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
+                        @csrf
+                        @method('DELETE')
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                      </form>
+                    </td>
                   </tr>
                   @endforeach
   

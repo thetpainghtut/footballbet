@@ -14,13 +14,13 @@
             @csrf
             <div class="form-group">
               <label for="league">Name:</label>
-              <input class="form-control" id="league" type="text" placeholder="Enter name" name="name" value="{{ old('name') }}">
+              <input class="form-control w-50" id="league" type="text" placeholder="Enter name" name="name" value="{{ old('name') }}">
               <div class="form-control-feedback text-danger"> {{$errors->first('name') }} </div>
             </div>
 
             <div class="form-group">
               <label for="country">Country:</label>
-              <input class="form-control" id="country" type="text" placeholder="Enter Country" name="country" value="{{ old('address') }}">
+              <input class="form-control w-50" id="country" type="text" placeholder="Enter Country" name="country" value="{{ old('address') }}">
               <div class="form-control-feedback text-danger"> {{$errors->first('country') }} </div>
             </div>
 

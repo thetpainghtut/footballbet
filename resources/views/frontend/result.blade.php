@@ -51,7 +51,7 @@
               $event_time=date("h:i A",strtotime($time));
             @endphp
             <tr>
-            <th scope="row">{{$match->event_date}} {{$event_time}}</th>
+            <th scope="row">{{Carbon\Carbon::parse($match->event_date)->format('d-m-Y')}} {{$event_time}}</th>
             <td class="align-middle">{{$match->home_team->name}} - {{$match->away_team->name}}</td>
             @if($match->result==null)
             <td>-</td>
