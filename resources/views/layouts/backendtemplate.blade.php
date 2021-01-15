@@ -94,7 +94,7 @@
         <ul class="sidebar-menu list-unstyled">
 
           <li class="sidebar-list-item"><a href="{{route('dashboard')}}" class="sidebar-link text-muted {{ Request::is('dashboard') ? 'active' : '' }}"><i class="o-home-1 mr-3 text-gray"></i><span>Dashboard</span></a></li>
-          <li class="sidebar-list-item"><a href="{{route('agents.index')}}" class="sidebar-link text-muted {{ Request::is('master/agents*') ? 'active' : '' }}"><i class="o-sales-up-1 mr-3 text-gray"></i><span>Agents</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('agents.index')}}" class="sidebar-link text-muted {{ Request::is('master/agents*') ? 'active' : '' }}"><i class="o-sales-up-1 mr-3 text-gray"></i><span>Members</span></a></li>
               
           <li class="sidebar-list-item"><a href="{{route('leagues.index')}}" class="sidebar-link text-muted {{ Request::is('master/leagues*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Leagues</span></a></li>
           <li class="sidebar-list-item"><a href="{{route('teams.index')}}" class="sidebar-link text-muted {{ Request::is('master/teams*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Teams</span></a></li>

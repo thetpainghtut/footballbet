@@ -16,7 +16,7 @@
         <div class="col-lg-12 mb-4">
           <div class="card">
             <div class="card-header">
-              <h6 class="text-uppercase mb-0 d-inline-block">Agent List</h6>
+              <h6 class="text-uppercase mb-0 d-inline-block">Member List</h6>
               <a href="{{route('agents.create')}}" class="btn btn-primary float-right">Add </a>
             </div>
             <div class="card-body">

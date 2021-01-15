@@ -7,7 +7,7 @@
         <div class="col-lg-12 mb-4">
           <div class="card">
             <div class="card-header">
-              <h6 class="text-uppercase mb-0 d-inline-block">Agent Create Form</h6>
+              <h6 class="text-uppercase mb-0 d-inline-block">Member Create Form</h6>
             </div>
             <div class="card-body">
               <form action="{{route('agents.store')}}" method="POST">

@@ -73,7 +73,7 @@ class AgentController extends Controller
             $transation->points=$agent->points;
             $transation->description="opening point";
             $transation->save();
-            return redirect()->route('agents.index')->with("successMsg",'New Agent is ADDED in your data');
+            return redirect()->route('agents.index')->with("successMsg",'New member is ADDED in your data');
         }else{
              return redirect::back()->withErrors($validator);
         }
@@ -162,6 +162,6 @@ class AgentController extends Controller
         $user =User::find($agent->user_id);
         $user->delete();
         $agent->delete();
-       return redirect()->route('agents.index')->with('successMsg','Existing Agent is DELETED in your data');
+       return redirect()->route('agents.index')->with('successMsg','Existing member is DELETED in your data');
     }
 }

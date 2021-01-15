@@ -89,7 +89,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <table class="table table-sm table-bordered">
+        <table class="table table-sm table-bordered maintable">
           <thead class="thead-dark">
             <tr>
               <th scope="col">TIME</th>
@@ -169,7 +169,10 @@
               }
           });
         $.post(url,{id:id},function(res){
-          //console.log(res);
+         // console.log(res);
+         if(res.team_goal_different==null){
+          res.team_goal_different="";
+         }
           if(bet_id==res.id){
              $('.soccer').removeClass('d-none');
             var html="";
@@ -177,6 +180,11 @@
           <li class="list-group-item">
             <p class="text-center">${league_name}</p>
             <p class="mb-0">${match}</p>`
+            if(goalstatus==null){
+              html+= `<p class="mb-0">Betrate:(${res.team_goal_different}${res.team_bet_odd})</p>`
+            }else{
+              html+= `<p class="mb-0">Betrate:(${res.team_goal}${res.team_goal_bet_odd})</p>`
+            }
             if(goalstatus==null){
               if(status==0){
                 html+=`<p>Home <strong>(0.95)</strong></p>`
@@ -291,11 +299,11 @@
       })
 
       var timeleft = 30;
+      var url="{{route('main')}}";
       var downloadTimer = setInterval(function(){
         if(timeleft <= 0){
           clearInterval(downloadTimer);
           window.location.reload();
-
           // want to reload for only this part
           // var url="{{route('pagereload')}}";
           // $.get(url,function(res){
@@ -371,10 +379,6 @@
           }
         return time.join (''); // return adjusted time or original string
       }
-
-
-
-
     });
   </script>
 @endsection
