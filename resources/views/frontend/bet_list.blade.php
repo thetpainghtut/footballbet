@@ -19,6 +19,7 @@
                 </thead>
                 <tbody>
                   @php $i=1;$totalpoint=0; @endphp
+                  @if($agent!=null)
                   @foreach($agent->betrates as $betrate)
                   <tr>
                   <td>{{$i++}}</th>
@@ -97,6 +98,7 @@
 
                   </tr>
                   @endforeach
+                  @endif
                   <tr><td colspan="6">totalpoint</td><td>{{$totalpoint}}</td></tr>
                 </tbody>
               </table>

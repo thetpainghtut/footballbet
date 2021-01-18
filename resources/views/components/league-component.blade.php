@@ -4,12 +4,16 @@
 
 <ul class="list-group my-4">
           <li class="list-group-item active"> Leagues </li>
-          @foreach($leagues as $league)
+          @foreach($leagues as $key=>$value)
+          @foreach($value as $row)
+          @php $leaguename=$row->league->name @endphp
+          @endforeach
           <li class="list-group-item d-flex justify-content-between align-items-center">
             {{-- English Premier League --}}
-           <a href="#" class="league" data-id="{{$league->id}}"> {{$league->name}} </a>
-            <span class="badge badge-primary badge-pill ">{{count($league->matches)}}</span>
+           <a href="#" class="league" data-id="{{$key}}">{{$leaguename}}</a>
+            <span class="badge badge-primary badge-pill ">{{count($value)}}</span>
           </li>
+ 
           @endforeach
           {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
             Spanish La Liga

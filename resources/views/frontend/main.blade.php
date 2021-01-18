@@ -86,7 +86,8 @@
       </div>
     </div>
     <!-- /.row -->
-
+    <input type="hidden" name="" value="{{Auth::user()->agent->max_point}}" class="max">
+    <input type="hidden" name="" value="{{Auth::user()->agent->min_point}}" class="min">
     <div class="row">
       <div class="col-md-12">
         <table class="table table-sm table-bordered maintable">
@@ -103,45 +104,8 @@
             </tr>
           </thead>
           <tbody class="mytbody">
-            <input type="hidden" name="" value="{{Auth::user()->agent->min_point}}" class="min">
-            <input type="hidden" name="" value="{{Auth::user()->agent->max_point}}" class="max">
-            @foreach($leagues as $league)
-            <tr class="table-primary">
-              <td colspan="8">{{$league->name}}
-                <span class="pagereload"></span>
-              </td>
-            </tr>
 
-            @foreach($league->matches as $match)
-            @php
-              $betrate = App\Betrate::where('match_id',$match->id)->latest()->first();
-              // dd($betrate);
-            @endphp
-            @if($betrate)
-             @php 
-              $time=$match->event_time;
-              $event_time=date("h:i A",strtotime($time));
-              @endphp
-            <tr class="text-center">
-              <th scope="row">
-                {{$event_time}}
-                <p class="mb-0 text-danger">Live</p>
-              </th>
-              @if($betrate->odd_team_status==0)
-              <td class="align-middle"><span class="text text-danger">{{$match->home_team->name}}</span> - {{$match->away_team->name}}</td>
-              @else
-              <td class="align-middle">{{$match->home_team->name}} - <span class="text text-danger">{{$match->away_team->name}}</span></td>
-              @endif
-              <td class="align-middle">({{$betrate->team_goal_different}}{{$betrate->team_bet_odd}})</td>
-              <td class="align-middle pointer" data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-status="0" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-              <td class="align-middle pointer" data-id="{{$betrate->id}}" data-status="1" data-matchid="{{$match->id}}" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-              <td class="align-middle" >({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd }})</td>
-              <td class="align-middle pointer" data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-goalstatus="0" data-league="{{$match->league->name}}"data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-              <td class="align-middle pointer"  data-matchid="{{$match->id}}" data-id="{{$betrate->id}}" data-status="null" data-goalstatus="1" data-league="{{$match->league->name}}" data-match="{{$match->home_team->name}} vs {{$match->away_team->name}}"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-            </tr>
-            @endif
-            @endforeach
-            @endforeach
+           
           </tbody>
         </table>
       </div>
@@ -152,6 +116,8 @@
 @section('script')
   <script type="text/javascript">
     $(document).ready(function(){
+      getData();
+      move();
       $(".mytbody").on('click','.pointer',function(res){
         var bet_id=$(this).data('id');
         var status=$(this).data("status");
@@ -248,12 +214,12 @@
           var max_point=res.max_point;
          // if(point>max_point)
          if(point>max_point){
-          alert("points are much than allow maximum points")
+         alert("points are much than allow maximum points")
           $(".soccer .userpoint").val("");
           $(".soccer .userpoint").focus();
          
          }else if(point<min_point){
-           alert("points are less than allow minimum points")
+          alert("points are less than allow minimum points")
           $(".soccer .userpoint").val("");
           $(".soccer .userpoint").focus();
 
@@ -270,7 +236,13 @@
         var bet_id=$(this).data("id");
         var bstatus=$(this).data("bstatus");
         var bgoalstatus=$(this).data("bgoalstatus");
+        var min_point=$(".min").val();
+        var max_point=$(".max").val();
         var url="{{route('matchuser')}}";
+
+        //console.log(point);
+
+        if(point>=min_point && point<=max_point){
         //console.log(point+" "+bstatus+" "+bgoalstatus);
         $.post(url,{bet_id:bet_id,point:point,bstatus:bstatus,bgoalstatus:bgoalstatus},function(res){
           //console.log(res);
@@ -279,6 +251,9 @@
             window.location.reload();
           }
         })
+      }else{
+        alert("points are limited")
+      }
 
       })
 
@@ -293,17 +268,16 @@
               }
           });
         $.post(url,{id:id},function(res){
-          console.log(res);
+          //console.log(res);
           showData(res);
         })
       })
 
-      var timeleft = 30;
-      var url="{{route('main')}}";
+     /* var timeleft = 30;
       var downloadTimer = setInterval(function(){
         if(timeleft <= 0){
           clearInterval(downloadTimer);
-          window.location.reload();
+          getData();
           // want to reload for only this part
           // var url="{{route('pagereload')}}";
           // $.get(url,function(res){
@@ -315,7 +289,7 @@
           $(".mytbody .pagereload").html(`(${timeleft})`)
         }
         timeleft -= 1;
-      }, 1000);
+      }, 1000);*/
 
       function showData(res) {
         var html=""
@@ -379,6 +353,81 @@
           }
         return time.join (''); // return adjusted time or original string
       }
+
+
+      function getData(){
+        //alert("ok");
+        var url="{{route('maindata')}}";
+        $.get(url,function(res){
+         console.log(res);
+         var html="";
+         $.each(res,function(i,v){
+          html+=`<tr class="table-primary">
+              <td colspan="8">${i}
+                <span class="pagereload"></span>
+              </td>
+            </tr>`
+            $.each(v,function(j,k){
+              //console.log(k.betrates);
+              var latestbetrate=k.betrates.pop();
+              var time=k.event_time;
+              if(latestbetrate.team_goal_different==null){
+                latestbetrate.team_goal_different="";
+              }
+              if(latestbetrate.team_bet_odd==null){
+                latestbetrate.team_bet_odd="";
+              }
+              if(latestbetrate.team_goal==null){
+                latestbetrate.team_goal="";
+              }
+              if(latestbetrate.team_goal_bet_odd==null){
+                latestbetrate.team_goal_bet_odd="";
+              }   
+             // console.log(latestbetrate);
+             if(latestbetrate){
+              html+=`<tr class="text-center">
+                      <th scope="row">
+                      ${tConvert(time)}
+                      <p class="mb-0 text-danger">Live</p>
+                    </th>`
+              if(latestbetrate.odd_team_status==0){
+                  html+=`<td class="align-middle"><span class="text text-danger">${k.home_team.name}</span> - ${k.away_team.name}</td>`
+                }else{
+                 html+=`<td class="align-middle">${k.home_team.name} - <span class="text text-danger">${k.away_team.name}</span></td>`
+              }
+              html+=`<td class="align-middle">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</td>
+              <td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="0" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer" data-id="${latestbetrate.id}" data-status="1" data-matchid="${k.id}" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle" >(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</td>
+              <td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-goalstatus="0" data-league="${k.league.name}"data-match="${k.home_team.name} vs ${k.away_team.name}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer"  data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="null" data-goalstatus="1" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td></tr>`
+             }
+            })
+         })
+
+         $(".mytbody").html(html);
+
+        })
+      }
+
+      
+      function move(){
+
+        var pos=10;
+
+        var id=setInterval(frame,1000);
+
+        function frame(){
+          if(pos<=0){
+            clearInterval(id)
+            getData();
+            move();
+          } 
+          $(".mytbody .pagereload").html(`(${pos})`)
+          pos--;
+        }
+      }
+
     });
   </script>
 @endsection

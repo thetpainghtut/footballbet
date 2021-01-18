@@ -65,7 +65,7 @@ class AgentController extends Controller
             $agent->commission_rate=$request->rate;
             $agent->save();
             $master = Auth::user();
-            $master_id=$user->id;
+            $master_id=$master->id;
             $transation=New TransationPoint;
             $transation->from=$master_id;
             $transation->to=$agent->user_id;

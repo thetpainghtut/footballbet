@@ -61,10 +61,8 @@
                   @foreach($agent->betrates as $betrate)
                   @php
                   $time=$betrate->match->event_time;
-                  $d = strtotime($time)-(10*60);
-                    
-                  $event_time=date("h:i A",$d);
-                 // dd($event_time);
+                  $event_time=date("h:i A",strtotime($time));
+                  //dd($event_time);
                   @endphp
                   <tr>
                   <td class="align-middle">{{$i++}}</th>
@@ -146,7 +144,7 @@
                 
                   @if($todaydate==$betrate->match->event_date)
 
-                    @if($current_time>$event_time)
+                    @if($current_time==$event_time)
                       <td class="align-middle"><a href="#" class="badge badge-primary">time up</a></td>
                     @else
                      <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->pivot->created_at}}" data-agentid="{{$agent->id}}">cancel</a></td>

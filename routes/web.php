@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('main','MainController@main')->name('main');
+Route::get('maindata',"MainController@maindata")->name('maindata');
 Route::get('pagereload','MainController@pagereload')->name('pagereload');
 
 Route::post('matchbyleague','MainController@matchbyleague')->name('matchbyleague');

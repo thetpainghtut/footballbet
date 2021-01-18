@@ -13,16 +13,26 @@ use App\Result;
 use App\TransationPoint;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Response;
 
 class MainController extends Controller
 {
-    public function main(){
+    public function main(){ 
+    return view('frontend.main');
+    }
 
-    	$leagues=League::whereHas('matches',function($query){
-    		$query->whereHas('betrates');
-    	})->get();
-    	//dd($leagues);
-    	return view('frontend.main',compact('leagues'));
+    public function maindata(){
+    $start_date=Carbon::now()->toDateString();
+    $addingday =Carbon::now()->addDays(1);
+    $end_date=$addingday->toDateString();
+
+    $time = Carbon::now();
+    $mytime=strtotime($time);
+    $addingtime=date("H:i", strtotime('+5 minutes', $mytime));
+
+    $matches=Match::with('betrates')->with('league')->with('home_team')->with('away_team')->whereHas('betrates')->doesntHave('result')->whereBetween('event_date',[$start_date,$end_date])->where('event_time','>',$addingtime)->get();
+    $mymatches=$matches->groupBy('league.name');
+    return $mymatches;
     }
 
     public function matchbyleague(Request $request){
