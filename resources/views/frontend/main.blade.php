@@ -88,6 +88,7 @@
     <!-- /.row -->
     <input type="hidden" name="" value="{{Auth::user()->agent->max_point}}" class="max">
     <input type="hidden" name="" value="{{Auth::user()->agent->min_point}}" class="min">
+    <input type="hidden" name="" value="{{Auth::user()->agent->points}}" class="spoint">
     <div class="row">
       <div class="col-md-12">
         <table class="table table-sm table-bordered maintable">
@@ -214,12 +215,12 @@
           var max_point=res.max_point;
          // if(point>max_point)
          if(point>max_point){
-         alert("points are much than allow maximum points")
+         //alert("points are much than allow maximum points")
           $(".soccer .userpoint").val("");
           $(".soccer .userpoint").focus();
          
          }else if(point<min_point){
-          alert("points are less than allow minimum points")
+          //alert("points are less than allow minimum points")
           $(".soccer .userpoint").val("");
           $(".soccer .userpoint").focus();
 
@@ -231,29 +232,45 @@
       })
 
       $(".soccer").on('click','.process',function(res){
-        //alert("ok");
-        var point=$(".soccer .userpoint").val();
+        $(this).attr("disabled","disabled");
+        var urllogin="{{route('loginuser')}}";
+        var point=Number($(".soccer .userpoint").val());
         var bet_id=$(this).data("id");
         var bstatus=$(this).data("bstatus");
         var bgoalstatus=$(this).data("bgoalstatus");
-        var min_point=$(".min").val();
-        var max_point=$(".max").val();
+        $.get(urllogin,function(res){
+        var min_point=Number(res.min_point);
+        var max_point=Number(res.max_point);
+        var user_point=Number(res.points)
         var url="{{route('matchuser')}}";
 
-        //console.log(point);
+        //console.log(typeof min_point,typeof max_point);
 
-        if(point>=min_point && point<=max_point){
-        //console.log(point+" "+bstatus+" "+bgoalstatus);
-        $.post(url,{bet_id:bet_id,point:point,bstatus:bstatus,bgoalstatus:bgoalstatus},function(res){
+         if(point>max_point){
+         alert("points are much than allow maximum points")
+          $(".soccer .userpoint").val("");
+          $(".soccer .userpoint").focus();
+         
+         }else if(point<min_point){
+          alert("points are less than allow minimum points")
+          $(".soccer .userpoint").val("");
+          $(".soccer .userpoint").focus();
+
+         }else if(point>user_point){
+           alert("points are much than your existing points")
+          $(".soccer .userpoint").val("");
+          $(".soccer .userpoint").focus();
+         }else{
+          $.post(url,{bet_id:bet_id,point:point,bstatus:bstatus,bgoalstatus:bgoalstatus},function(res){
           //console.log(res);
           if(res=="success"){
             alert("successfully bet")
             window.location.reload();
           }
         })
-      }else{
-        alert("points are limited")
-      }
+         }
+      })
+        //alert("ok");
 
       })
 
@@ -413,7 +430,7 @@
       
       function move(){
 
-        var pos=10;
+        var pos=30;
 
         var id=setInterval(frame,1000);
 

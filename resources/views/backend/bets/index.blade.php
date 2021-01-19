@@ -53,7 +53,7 @@
                   $date = Carbon\Carbon::now();
                   $todaydate=$date->toDateString();
                   $now = Carbon\Carbon::now();
-                  $current_time= $now->format('g:i A');
+                  $current_time=date("h:i A",strtotime($now));
                   //dd($current_time);
                   @endphp
                   @foreach($agents as $agent)
@@ -105,7 +105,12 @@
                     @if($betrate->pivot->betting_total_goal_status===null)
                       @php 
                       $team_goal_different=$betrate->team_goal_different;
-                      $bteam_goal_different=$betrate->match->result->home_team_score-$betrate->match->result->away_team_score;
+                      if($betrate->odd_team_status==0){
+                        $bteam_goal_different=$betrate->match->result->home_team_score-$betrate->match->result->away_team_score;
+                      }else{
+                        $bteam_goal_different=$betrate->match->result->away_team_score-$betrate->match->result->home_team_score;
+                      }
+                      
                       $winloosepoint=0;
                       if($bteam_goal_different>$team_goal_different){
                         $winloosepoint+=$betrate->pivot->goal_different_greater;
@@ -144,7 +149,7 @@
                 
                   @if($todaydate==$betrate->match->event_date)
 
-                    @if($current_time==$event_time)
+                    @if($current_time>=$event_time)
                       <td class="align-middle"><a href="#" class="badge badge-primary">time up</a></td>
                     @else
                      <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->pivot->created_at}}" data-agentid="{{$agent->id}}">cancel</a></td>

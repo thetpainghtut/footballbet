@@ -14,17 +14,11 @@
             @csrf
             @method('PUT')
             <div class="form-group row">
-              <div class="col">
-                <label for="date">Date</label>
-                  <input class="form-control" type="date" id="date" name="date" value="{{$match->event_date}}">
-                  <div class="form-control-feedback text-danger"> {{$errors->first('date') }} </div>
-              </div>
-
-              <div class="col">
-                <label for="example-time-input">Time</label>
-                  <input class="form-control" type="time" id="example-time-input" name="time" value="{{$match->event_time}}">
-                  <div class="form-control-feedback text-danger"> {{$errors->first('time') }} </div>
-              </div>
+                  <div class="col">
+                    <label for="date">Date</label>
+                      <input class="form-control" type="datetime-local" id="date" name="date" value="{{ date('Y-m-d\TH:i', strtotime($match->datetime))}}">
+                      <div class="form-control-feedback text-danger"> {{$errors->first('date') }} </div>
+                  </div>
             </div>
               
             <div class="form-group">
@@ -61,6 +55,7 @@
                 <div class="form-control-feedback text-danger"> {{$errors->first('ateam') }} </div>
               </div>
             </div>
+
 
             <div class="form-group">
               <button class="btn btn-primary" type="submit">Update</button>

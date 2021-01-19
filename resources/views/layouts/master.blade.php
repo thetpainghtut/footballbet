@@ -29,6 +29,8 @@
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+ 
+
   <!-- Custom styles for this template -->
   <link href="{{ asset('frontend_assets/css/custom.css')}}" rel="stylesheet">
 

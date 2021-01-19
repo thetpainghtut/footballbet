@@ -24,6 +24,7 @@
     <!-- Favicon-->
     <link rel="shortcut icon" href="{{ asset('backend_assets/img/favicon.png?3') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.min.css') }}">
+     <link rel="stylesheet" href="{{asset('backend_assets/css/bootstrap-datetimepicker.min.css')}}">
      
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -150,11 +151,14 @@
     <script src="{{ asset('backend_assets/vendor/jquery.cookie/jquery.cookie.js')}}"> </script>
     <script src="{{ asset('backend_assets/vendor/chart.js/Chart.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js')}}"></script>
+    <script src="{{ asset('backend_assets/js/moment.js')}}"></script>
     <script type="text/javascript" src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('backend_assets/js/charts-home.js')}}"></script>
     <script src="{{ asset('backend_assets/js/front.js')}}"></script>
     <script src="{{asset('datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('backend_assets/js/bootstrap-datetimepicker.min.js')}}"></script>
+
 
   <!-- Page level custom scripts -->
     <script src="{{asset('demo/datatables-demo.js')}}"></script>

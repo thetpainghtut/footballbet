@@ -46,16 +46,21 @@ class MatchController extends Controller
         'league'  => ['required'],
         'hteam'=>['required'],
         'ateam'=>['required'],
-        'time'=>['required','date_format:H:i'],
         'date'=>['required','date'],
         ]);
         if($validator){
+            //dd($request->date);
+            $new_date = date("Y-m-d H:i",strtotime($request->date));
+            //dd($new_date);
+            $date_ar = explode(' ', $new_date);
+            //dd($date_ar);
             $match=new Match;
             $match->league_id=$request->league;
             $match->home_team_id=$request->hteam;
             $match->away_team_id=$request->ateam;
-            $match->event_date=$request->date;
-            $match->event_time=$request->time;
+            $match->event_date=$date_ar[0];
+            $match->event_time=$date_ar[1];
+            $match->datetime=$new_date;
             $match->save();
             return redirect()->route('matches.index')->with("successMsg",'New Match is ADDED in your data');
         }
@@ -112,16 +117,20 @@ class MatchController extends Controller
         'league'  => ['required'],
         'hteam'=>['required'],
         'ateam'=>['required'],
-        'time'=>['required','date_format:H:i'],
-        'date'=>['required','date'],
+        'date'=>['required'],
         ]);
         if($validator){
+            //dd($request->date);
+            $new_date = date("Y-m-d H:i",strtotime($request->date));
+            //dd($new_date);
+            $date_ar = explode(' ', $new_date);
             $match=Match::find($id);
             $match->league_id=$request->league;
             $match->home_team_id=$request->hteam;
             $match->away_team_id=$request->ateam;
-            $match->event_date=$request->date;
-            $match->event_time=$request->time;
+            $match->event_date=$date_ar[0];
+            $match->event_time=$date_ar[1];
+            $match->datetime=$new_date;
             $match->save();
             return redirect()->route('matches.index')->with("successMsg",'Update Successfully');
         }

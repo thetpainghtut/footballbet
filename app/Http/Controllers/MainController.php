@@ -28,9 +28,10 @@ class MainController extends Controller
 
     $time = Carbon::now();
     $mytime=strtotime($time);
-    $addingtime=date("H:i", strtotime('+5 minutes', $mytime));
+    $addingtime=date("Y-m-d H:i", strtotime('+5 minutes', $mytime));
+    //dd($addingtime);
 
-    $matches=Match::with('betrates')->with('league')->with('home_team')->with('away_team')->whereHas('betrates')->doesntHave('result')->whereBetween('event_date',[$start_date,$end_date])->where('event_time','>',$addingtime)->get();
+    $matches=Match::with('betrates')->with('league')->with('home_team')->with('away_team')->whereHas('betrates')->doesntHave('result')->whereBetween('event_date',[$start_date,$end_date])->where('datetime','>',$addingtime)->get();
     $mymatches=$matches->groupBy('league.name');
     return $mymatches;
     }
@@ -253,7 +254,12 @@ class MainController extends Controller
                 if($match_id==$betrate->match_id){
                 if($betrate->betting_total_goal_status===null){ 
                       $team_goal_different=$betrate->team_goal_different;
-                      $bteam_goal_different=$result->home_team_score-$result->away_team_score;
+                      if($betrate->odd_team_status==0){
+                         $bteam_goal_different=$result->home_team_score-$result->away_team_score;
+                     }else{
+                         $bteam_goal_different=$result->away_team_score-$result->home_team_score;
+                     }   
+                      //dd($bteam_goal_different);
                       $winloosepoint=0;
                       if($bteam_goal_different>$team_goal_different){
                         $winloosepoint+=$betrate->goal_different_greater;

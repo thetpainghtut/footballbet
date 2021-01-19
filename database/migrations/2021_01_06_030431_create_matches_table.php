@@ -20,6 +20,7 @@ class CreateMatchesTable extends Migration
             $table->unsignedBigInteger('away_team_id');
             $table->string('event_date');
             $table->string('event_time');
+            $table->dateTime('datetime');
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('home_team_id')

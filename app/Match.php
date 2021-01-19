@@ -8,7 +8,7 @@ class Match extends Model
 {
      use SoftDeletes;
  	 protected $fillable=[
-    	'league_id','home_team_id','away_team_id','event_date','event_time'
+    	'league_id','home_team_id','away_team_id','event_date','event_time','datetime'
 	];
 
 	public function league(){

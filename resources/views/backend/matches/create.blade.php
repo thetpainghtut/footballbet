@@ -15,14 +15,8 @@
                 <div class="form-group row">
                   <div class="col">
                     <label for="date">Date</label>
-                      <input class="form-control" type="date" id="date" name="date">
+                      <input class="form-control" type="datetime-local" id="date" name="date">
                       <div class="form-control-feedback text-danger"> {{$errors->first('date') }} </div>
-                  </div>
-
-                  <div class="col">
-                    <label for="example-time-input">Time</label>
-                      <input class="form-control" type="time" id="example-time-input" name="time">
-                      <div class="form-control-feedback text-danger"> {{$errors->first('time') }} </div>
                   </div>
                 </div>
                   
