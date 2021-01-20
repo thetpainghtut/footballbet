@@ -160,30 +160,74 @@ class MainController extends Controller
     public function bets(){
         $allagents=Agent::all();
 
-        $agents=Agent::with('betrates.match.result')->whereHas('betrates')->get();
-        //dd($agents);
+        /*$agents=Agent::with('betrates.match.result')->whereHas('betrates')->get();
+        //dd($agents);*/
+
+        $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->whereDate('agent_betrate.created_at',Carbon::today())
+                ->get();
+        $mymatches=$agents->groupBy('agent_id');
+       // dd($mymatches);
         
-        return view('backend.bets.index',compact('agents','allagents'));
+        return view('backend.bets.index',compact('mymatches','allagents'));
     }
 
 
     public function betsbyagent(Request $request){
         $sdate=$request->sdate;
+        //dd($sdate);
         $edate=$request->edate;
         $agent_id=$request->agent_id;
+        $betrates="";
 
-        if($edate==null && $agent_id==null){
-        $agents=Agent::with('betrates.match.result')->whereHas('betrates')->get();
-
-        }else if($agent_id==null){
-            
-            
-        }else if($edate==null && $sdate==null){
-           
-        }else if($edate==null){
-            
+        if($agent_id==null){
+        $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
+                ->get();
+            $betrates=$agents->groupBy('agent_id');
+        }else if($sdate==null &&$edate==null){
+            $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->where('agent_betrate.agent_id',$agent_id)
+                ->get();
+                $betrates=$agents->groupBy('agent_id');
         }else{
-           
+             $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->where('agent_betrate.agent_id',$agent_id)
+                ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
+                ->get();
+                $betrates=$agents->groupBy('agent_id');
         }
         return $betrates;
 
@@ -251,6 +295,18 @@ class MainController extends Controller
 
 
             foreach ($agentbetrates as $betrate) {
+                if($betrate->team_goal_different==null){
+                     $betrate->team_goal_different="";
+                          }
+                    if($betrate->team_bet_odd==null){
+                      $betrate->team_bet_odd="";
+                        }
+                    if($betrate->team_goal==null){
+                      $betrate->team_goal="";
+                      }
+                    if($betrate->team_goal_bet_odd==null){
+                      $betrate->team_goal_bet_odd="";
+                  }  
                 if($match_id==$betrate->match_id){
                 if($betrate->betting_total_goal_status===null){ 
                       $team_goal_different=$betrate->team_goal_different;
