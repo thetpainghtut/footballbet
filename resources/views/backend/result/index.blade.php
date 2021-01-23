@@ -22,7 +22,8 @@
               <h6 class="text-uppercase mb-0 d-inline-block">Result List Today</h6>
             </div>
             <div class="card-body">
-              <table class="table table-bordered">
+              <div class="table-responsive">
+                <table class="table table-bordered">
                 <thead class="thead-dark">
                   <tr>
                     <th>#</th>
@@ -57,7 +58,8 @@
                   </tr>  
                   @endforeach
                 </tbody>
-              </table>
+                </table>
+              </div>
             </div>
           </div>
         </div>

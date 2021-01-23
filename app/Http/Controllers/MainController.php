@@ -18,6 +18,7 @@ use Response;
 class MainController extends Controller
 {
     public function main(){ 
+        //dd($start_date);
     return view('frontend.main');
     }
 
@@ -83,7 +84,7 @@ class MainController extends Controller
                 $goal_different_greater=$p*(0.95+$cr);
                 $goal_different_less=-$p*(1-$cr);
 
-                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_team_status' => $status,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less ]);
+                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_team_status' => $status,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less ,'status'=>0]);
                 //dd("hi");
 
                 //$matchuser->goal_different_equal=
@@ -104,7 +105,7 @@ class MainController extends Controller
                 
                 $goal_different_greater=-$p*(1-$cr);
                 $goal_different_less=$p*(0.95+$cr);
-                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_team_status' => $status,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less ]);
+                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_team_status' => $status,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less,'status'=>0]);
             }
         }else{
             $goaldifferent=$bet->team_goal_different;
@@ -125,7 +126,7 @@ class MainController extends Controller
                
                 $goal_different_greater=$p*(0.95+$cr);
                 $goal_different_less=-$p*(1-$cr);
-                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_total_goal_status' => $goalstatus,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less ]);
+                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_total_goal_status' => $goalstatus,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less,'status'=>0]);
             }else{
                if($betodd=="="){
                     $goal_different_equal=0;
@@ -141,7 +142,7 @@ class MainController extends Controller
                
                 $goal_different_greater=-$p*(1-$cr);
                 $goal_different_less=$p*(0.95+$cr);
-                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_total_goal_status' => $goalstatus,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less ]);
+                $agent->betrates()->attach($bet_id, ['bet_amount' => $p, 'betting_total_goal_status' => $goalstatus,'goal_different_equal'=>$goal_different_equal,'goal_different_greater' => $goal_different_greater,'goal_different_less' =>$goal_different_less,'status'=>0 ]);
             }
         }
         $agent=Agent::find($id);
@@ -173,6 +174,7 @@ class MainController extends Controller
                 ->join('users','users.id','=','agents.user_id')
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->whereDate('agent_betrate.created_at',Carbon::today())
+                ->where('agent_betrate.deleted_at',null)
                 ->get();
         $mymatches=$agents->groupBy('agent_id');
        // dd($mymatches);
@@ -199,6 +201,7 @@ class MainController extends Controller
                 ->join('users','users.id','=','agents.user_id')
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
+                ->where('agent_betrate.deleted_at',null)
                 ->get();
             $betrates=$agents->groupBy('agent_id');
         }else if($sdate==null &&$edate==null){
@@ -212,6 +215,7 @@ class MainController extends Controller
                 ->join('users','users.id','=','agents.user_id')
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->where('agent_betrate.agent_id',$agent_id)
+                ->where('agent_betrate.deleted_at',null)
                 ->get();
                 $betrates=$agents->groupBy('agent_id');
         }else{
@@ -226,6 +230,7 @@ class MainController extends Controller
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->where('agent_betrate.agent_id',$agent_id)
                 ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
+                ->where('agent_betrate.deleted_at',null)
                 ->get();
                 $betrates=$agents->groupBy('agent_id');
         }
@@ -289,6 +294,7 @@ class MainController extends Controller
             ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
             ->where('betrates.match_id',$match_id)
             ->select('betrates.*','agent_betrate.*')
+            ->where('agent_betrate.deleted_at',null)
             ->get();
         //dd($agents);
                 $winloosepoint=0;
@@ -373,15 +379,169 @@ class MainController extends Controller
         $user = Auth::user();
         $id=$user->agent->id;
         
-        $agent=Agent::with('betrates.match.result')->whereHas('betrates')->where('id',$id)->first();
+        
+         $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->whereDate('agent_betrate.created_at',Carbon::today())
+                ->where('agent_betrate.agent_id',$id)
+                ->where('agent_betrate.deleted_at',null)
+                ->get();
         //dd($agent);
-        return view('frontend.bet_list',compact('agent'));
+        return view('frontend.bet_list',compact('agents'));
     }
 
     public function pagereload($value='')
     {
         $matches=Match::with('league')->with('betrates')->with('home_team')->with('away_team')->get();
         return $matches;
+    }
+
+    public function agentbetlist(Request $request){
+        $sdate=$request->sdate;
+        //dd($sdate);
+        $edate=$request->edate;
+        $user = Auth::user();
+        $id=$user->agent->id;
+        $agents=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
+                ->where('agent_betrate.agent_id',$id)
+                ->where('agent_betrate.deleted_at',null)
+                ->get();
+            $betrates=$agents->groupBy('agent_id');
+
+            return $betrates;
+    }
+
+
+    public function sellpoint(Request $request){
+        $validator = $request->validate([
+            'sellpoint'=> ['required'],
+        ]);
+        if($validator){
+        DB::transaction(function() use($request){
+        $agent_id=$request->agent_id;
+        $sellpoint=$request->sellpoint;
+        $user = Auth::user();
+        $master_id=$user->id;
+        //dd($agent_id);
+        $agent=Agent::find($agent_id);
+        $agent_points=$agent->points;
+        $agent->points=$agent_points-$sellpoint;
+        $agent->save();
+        $transation=New TransationPoint;
+        $transation->from=$master_id;
+        $transation->to=$agent->user->id;
+        $transation->transation_type_id=2;
+        $transation->points=$sellpoint;
+        $transation->description="sell point";
+        $transation->save();
+        });
+        return response()->json(['success'=>'successfully sell!']);
+        }else{
+             return redirect::back()->withErrors($validator);
+        }
+    }
+
+    public function addpoint(Request $request){
+        $validator = $request->validate([
+            'addpoint'=> ['required'],
+        ]);
+        if($validator){
+        DB::transaction(function() use($request){
+        $agent_id=$request->agent_id;
+        $addpoint=$request->addpoint;
+        $user = Auth::user();
+        $master_id=$user->id;
+        //dd($agent_id);
+        $agent=Agent::find($agent_id);
+        $agent_points=$agent->points;
+        $agent->points=$agent_points+$addpoint;
+        $agent->save();
+        $transation=New TransationPoint;
+        $transation->from=$master_id;
+        $transation->to=$agent->user->id;
+        $transation->transation_type_id=1;
+        $transation->points=$addpoint;
+        $transation->description="add point";
+        $transation->save();
+        });
+        return response()->json(['success'=>'successfully add!']);
+        }else{
+             return redirect::back()->withErrors($validator);
+        }
+    }
+
+    public function generatestartingpoint(Request $request){
+       $validator = $request->validate([
+            'agents'=> ['required'],
+        ]);
+        if($validator){
+            $requestagents=$request->agents; // 1,2
+            $agenttransaction=[];
+            foreach ($requestagents as $key => $value) {
+                $transation=TransationPoint::with('touser.agent')->whereHas('touser.agent',function($query) use($value){
+                    $query->where('id',$value);
+                })->where('transation_type_id',5)->first();
+                array_push($agenttransaction, $transation);
+            }
+            foreach ($agenttransaction as $row) {
+                $agent=Agent::find($row->touser->agent->id);
+                $points=$agent->points;
+                $tpoints=$row->points;
+                dd($agent->fixbetrates()->get());
+                if($points>=$tpoints){
+                 DB::transaction(function() use($agent,$tpoints){
+                    $transactionpoints=$agent->points-$tpoints;
+                    $agent->points=$tpoints;
+                    $agent->save();
+                    $user = Auth::user();
+                    $master_id=$user->id;
+                    $transation=New TransationPoint;
+                    $transation->from=$master_id;
+                    $transation->to=$agent->user->id;
+                    $transation->transation_type_id=1;
+                    $transation->points=$transactionpoints;
+                    $transation->description="generate add point";
+                    $transation->save();
+                 });
+                }elseif($points<$tpoints){
+                    DB::transaction(function() use($agent,$tpoints){
+                    $transactionpoints=$tpoints-$agent->points;
+                    $agent->points=$tpoints;
+                    $agent->save();
+                    $user = Auth::user();
+                    $master_id=$user->id;
+                    $transation=New TransationPoint;
+                    $transation->from=$master_id;
+                    $transation->to=$agent->user->id;
+                    $transation->transation_type_id=2;
+                    $transation->points=$transactionpoints;
+                    $transation->description="generate sell point";
+                    $transation->save();
+                 });
+                }
+            }
+
+            return response()->json(['success'=>'successfully generate!']);
+        }else{
+           return redirect::back()->withErrors($validator); 
+        }
+
     }
 
 }

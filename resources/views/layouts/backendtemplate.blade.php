@@ -101,9 +101,8 @@
           <li class="sidebar-list-item"><a href="{{route('teams.index')}}" class="sidebar-link text-muted {{ Request::is('master/teams*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Teams</span></a></li>
           <li class="sidebar-list-item"><a href="{{route('matches.index')}}" class="sidebar-link text-muted {{ Request::is('master/matches*') ? 'active' : '' }}"><i class="o-table-content-1 mr-3 text-gray"></i><span>Matches</span></a></li>
           <li class="sidebar-list-item"><a href="{{route('bets.index')}}" class="sidebar-link text-muted {{ Request::is('bets*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Bets</span></a></li>
-              
-            
-              <li class="sidebar-list-item"><a href="{{route('results.index')}}" class="sidebar-link text-muted {{ Request::is('master/results*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Results</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('todaybetlist')}}" class="sidebar-link text-muted {{ Request::is('todaybetlist*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Today Bets</span></a></li> 
+          <li class="sidebar-list-item"><a href="{{route('results.index')}}" class="sidebar-link text-muted {{ Request::is('master/results*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Results</span></a></li>
               
 
 

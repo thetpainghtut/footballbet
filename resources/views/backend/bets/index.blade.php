@@ -32,6 +32,7 @@
                   </div>
                 </div>
               </form>
+              <div class="table-responsive">
               <table class="table table-bordered">
                 <thead class="thead-dark">
                   <tr>
@@ -177,6 +178,7 @@
                   @endforeach
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
         </div>
@@ -279,9 +281,9 @@
                     if(v.betting_total_goal_status===null){
                       var team_goal_different=v.team_goal_different;
                       if(v.odd_team_status==0){
-                        var bteam_goal_different=v.home_team_score-v.away_team_score;
+                        var bteam_goal_different=Number(v.home_team_score)-Number(v.away_team_score);
                       }else{
-                        var bteam_goal_different=v.away_team_score-v.home_team_score;
+                        var bteam_goal_different=Number(v.away_team_score)-Number(v.home_team_score);
                       }
                       
                       var winloosepoint=0;
@@ -299,7 +301,9 @@
                       
                     }else{
                       var team_goal_different=v.team_goal;
-                      var bteam_goal_different=v.home_team_score+v.away_team_score;
+                      //console.log(team_goal_different);
+                      var bteam_goal_different=Number(v.home_team_score)+Number(v.away_team_score);
+                      console.log(bteam_goal_different);
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
                         winloosepoint+=v.goal_different_greater;

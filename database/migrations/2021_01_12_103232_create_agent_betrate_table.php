@@ -22,7 +22,8 @@ class CreateAgentBetrateTable extends Migration
             $table->boolean('betting_total_goal_status')->nullable();
             $table->integer('goal_different_equal')->nullable();
             $table->integer('goal_different_greater')->nullable();
-             $table->integer('goal_different_less')->nullable();
+            $table->integer('goal_different_less')->nullable();
+            $table->integer('status');
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('betrate_id')

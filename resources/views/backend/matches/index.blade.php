@@ -23,7 +23,8 @@
               <a href="{{route('matches.create')}}" class="btn btn-primary float-right">Add </a>
             </div>
             <div class="card-body">
-              <table class="table table-bordered">
+            <div class="table-responsive">
+              <table class="table table-bordered dataTable">
                 <thead class="thead-dark">
                   <tr>
                     <th>#</th>
@@ -76,6 +77,7 @@
                   @endforeach
                 </tbody>
               </table>
+            </div>
             </div>
           </div>
         </div>
@@ -360,7 +362,7 @@
 
     $(".result").click(function(){
         var match=$(this).data('match');
-        console.log(match);
+        //console.log(match);
         var id=$(this).data('id');
         $("#resultmodal #exampleModalLabel").html(match);
         $("#resultmodal #resultmatch").val(id);

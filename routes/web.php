@@ -35,6 +35,10 @@ Route::post('generatepoint','MainController@generatepoint')->name('generatepoint
 Route::get('result','MainController@result')->name('result');
 Route::get('bet_list','MainController@bet_list')->name('bet_list');
 Route::post('betsbyagent','MainController@betsbyagent')->name('betsbyagent');
+Route::post('agentbetlist','MainController@agentbetlist')->name('agentbetlist');
+Route::post('sellpoint','MainController@sellpoint')->name('sellpoint');
+Route::post('addpoint','MainController@addpoint')->name('addpoint');
+Route::post('generatestartingpoint','MainController@generatestartingpoint')->name('generatestartingpoint');
 Route::get('report', function (){
   return view('frontend.report');
 })->name('report');
@@ -55,7 +59,12 @@ Route::prefix('master')->group(function () {
   Route::resource('teams','TeamController');
   Route::resource('matches','MatchController');
   Route::get('matches/viewbet/{id}','MatchController@viewbet')->name('viewbet');
+  Route::get('todaybetlist','BetController@todaybetlist')->name('todaybetlist');
 
+  Route::get('homepoints/{id}','BetController@homepoints')->name('homepoints');
+  Route::get('awaypoints/{id}','BetController@awaypoints')->name('awaypoints');
+  Route::get('overpoints/{id}','BetController@overpoints')->name('overpoints');
+  Route::get('underpoints/{id}','BetController@underpoints')->name('underpoints');
   Route::resource('results','ResultController');
 });
 Route::post('teambyleague','MatchController@teambyleague')->name('teambyleague');

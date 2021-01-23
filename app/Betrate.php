@@ -17,7 +17,7 @@ class Betrate extends Model
 
 	public function agents(){
 		return $this->belongsToMany('App\Agent','agent_betrate','agent_id','betrate_id')
-					->withPivot('bet_amount','betting_team_status','betting_total_goal_status','goal_different_equal','goal_different_greater','goal_different_less')
+					->withPivot('bet_amount','betting_team_status','betting_total_goal_status','goal_different_equal','goal_different_greater','goal_different_less','status')
       				->withTimestamps();
 	}
 }

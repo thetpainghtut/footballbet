@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon;
+use Carbon\Carbon;
 class Agent extends Model
 {
 	 use SoftDeletes;
@@ -18,11 +18,17 @@ class Agent extends Model
   }
   public function betrates(){
 		return $this->belongsToMany('App\Betrate','agent_betrate','agent_id','betrate_id')
-					->withPivot('bet_amount','betting_team_status','betting_total_goal_status','goal_different_equal','goal_different_greater','goal_different_less')
+					->withPivot('bet_amount','betting_team_status','betting_total_goal_status','goal_different_equal','goal_different_greater','goal_different_less','status')
       				->withTimestamps();
 	}
-	// public function today_betrates($value='')
-	// {
-	// 	return $this->belongsToMany('App\Betrate')->wherePivot('created_at',Carbon\Carbon::today());
-	// }
+
+	public function fixbetrates($value='')
+	{
+		$end_date=Carbon::now()->toDateTimeString();
+        $addingday =Carbon::now()->subDays(4);
+        $start_date=$addingday->toDateTimeString();
+
+		return $this->belongsToMany('App\Betrate')->wherePivot('status',0)->wherePivot('created_at','<=',$end_date.' 11:59:59');
+	}
+	
 }

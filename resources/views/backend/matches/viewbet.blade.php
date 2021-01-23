@@ -28,7 +28,8 @@
                   </div>
                 </div>
               </form>--}}
-              <table class="table table-bordered">
+              <div class="table-responsive">
+                <table class="table table-bordered">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">No</th>
@@ -65,7 +66,8 @@
                     </tr>
                   @endforeach
                 </tbody>
-              </table>
+                </table>
+              </div>
             </div>
           </div>
         </div>

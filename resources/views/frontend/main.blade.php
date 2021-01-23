@@ -91,6 +91,7 @@
     <input type="hidden" name="" value="{{Auth::user()->agent->points}}" class="spoint">
     <div class="row">
       <div class="col-md-12">
+        <div class="table-responsive">
         <table class="table table-sm table-bordered maintable">
           <thead class="thead-dark">
             <tr>
@@ -109,6 +110,7 @@
            
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   </div>

@@ -20,7 +20,8 @@
               <a href="{{route('teams.create')}}" class="btn btn-primary float-right">Add </a>
             </div>
             <div class="card-body">
-              <table class="table table-bordered">
+            <div class="table-responsive">
+              <table class="table table-bordered dataTable">
                 <thead class="thead-dark">
                   <tr>
                     <th>#</th>
@@ -54,6 +55,7 @@
                   
                 </tbody>
               </table>
+            </div>
             </div>
           </div>
         </div>

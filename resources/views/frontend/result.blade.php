@@ -32,7 +32,8 @@
 
   <div class="row my-4">
     <div class="col-md-12">
-      <table class="table table-bordered">
+      <div class="table-responsive">
+        <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
             <th scope="col">Date</th>
@@ -62,7 +63,8 @@
           @endforeach
          @endforeach
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   </div>
   {{-- end row --}}
