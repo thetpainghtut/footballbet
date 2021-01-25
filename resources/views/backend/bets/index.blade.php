@@ -288,11 +288,11 @@
                       
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
-                        winloosepoint+=v.goal_different_greater;
+                        winloosepoint+=Number(v.goal_different_greater);
                         }else if(bteam_goal_different<team_goal_different){
-                          winloosepoint+=v.goal_different_less;
+                          winloosepoint+=Number(v.goal_different_less);
                         }else{
-                          winloosepoint+=v.goal_different_equal;
+                          winloosepoint+=Number(v.goal_different_equal);
                         }
                      
                         totalpoint+=winloosepoint;
@@ -306,11 +306,11 @@
                       console.log(bteam_goal_different);
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
-                        winloosepoint+=v.goal_different_greater;
+                        winloosepoint+=Number(v.goal_different_greater);
                         }else if(bteam_goal_different<team_goal_different){
-                          winloosepoint+=v.goal_different_less;
+                          winloosepoint+=Number(v.goal_different_less);
                         }else{
-                          winloosepoint+=v.goal_different_equal;
+                          winloosepoint+=Number(v.goal_different_equal);
                         }
                      
                         totalpoint+=winloosepoint;

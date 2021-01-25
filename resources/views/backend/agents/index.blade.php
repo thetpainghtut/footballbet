@@ -73,6 +73,7 @@
                       </form>
                       <a href="#" class="btn btn-info btn-sm addpoint" data-id="{{$row->id}}">Add Point</a>
                       <a href="#" class="btn btn-success btn-sm sellpoint" data-id="{{$row->id}}">Sell Point</a>
+                      <a href="{{route("printagentbet",$row->id)}}" class="btn btn-dark btn-sm print">Print</a>
                     </td>
                   </tr>
                   @endforeach
@@ -301,6 +302,7 @@
 
         })
     })
+
 
   })
   

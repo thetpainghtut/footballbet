@@ -175,6 +175,7 @@ class MainController extends Controller
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->whereDate('agent_betrate.created_at',Carbon::today())
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
         $mymatches=$agents->groupBy('agent_id');
        // dd($mymatches);
@@ -202,6 +203,7 @@ class MainController extends Controller
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
             $betrates=$agents->groupBy('agent_id');
         }else if($sdate==null &&$edate==null){
@@ -216,6 +218,7 @@ class MainController extends Controller
                 ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
                 ->where('agent_betrate.agent_id',$agent_id)
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
                 $betrates=$agents->groupBy('agent_id');
         }else{
@@ -231,6 +234,7 @@ class MainController extends Controller
                 ->where('agent_betrate.agent_id',$agent_id)
                 ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
                 $betrates=$agents->groupBy('agent_id');
         }
@@ -259,6 +263,7 @@ class MainController extends Controller
 
     public function cancelbet(Request $request){
         $id=$request->id;
+        //dd($id);
         $agent_id=$request->agent_id;
 
         $agent=Agent::find($agent_id);
@@ -266,7 +271,10 @@ class MainController extends Controller
         $addingpoints=$agentbetrate->pivot->bet_amount;
         $agent->points+=$addingpoints;
         $agent->save();
-        $agent->betrates()->wherePivot('created_at','=',$id)->detach();
+        $data=$agent->betrates()->wherePivot('created_at','=',$id)->first();
+        // dd($data);
+        $agent->betrates()->wherePivot('created_at','=',$id)->updateExistingPivot($data->pivot->betrate_id, ['status' => 2],false);
+        
         $user = Auth::user();
         $master_id=$user->id;
         $transation=New TransationPoint;
@@ -294,6 +302,7 @@ class MainController extends Controller
             ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
             ->where('betrates.match_id',$match_id)
             ->select('betrates.*','agent_betrate.*')
+            ->where('agent_betrate.status','!=',2)
             ->where('agent_betrate.deleted_at',null)
             ->get();
         //dd($agents);
@@ -392,6 +401,7 @@ class MainController extends Controller
                 ->whereDate('agent_betrate.created_at',Carbon::today())
                 ->where('agent_betrate.agent_id',$id)
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
         //dd($agent);
         return view('frontend.bet_list',compact('agents'));
@@ -421,6 +431,7 @@ class MainController extends Controller
                 ->whereBetween('agent_betrate.created_at',[$sdate.' 00:00:00',$edate.' 23:59:59'])
                 ->where('agent_betrate.agent_id',$id)
                 ->where('agent_betrate.deleted_at',null)
+                ->where('agent_betrate.status','!=',2)
                 ->get();
             $betrates=$agents->groupBy('agent_id');
 
@@ -503,12 +514,17 @@ class MainController extends Controller
                 $agent=Agent::find($row->touser->agent->id);
                 $points=$agent->points;
                 $tpoints=$row->points;
-                dd($agent->fixbetrates()->get());
+                $data=$agent->fixbetrates()->get();
+                //dd($data);
+                
                 if($points>=$tpoints){
-                 DB::transaction(function() use($agent,$tpoints){
+                 DB::transaction(function() use($agent,$tpoints,$data){
                     $transactionpoints=$agent->points-$tpoints;
                     $agent->points=$tpoints;
                     $agent->save();
+                    foreach ($data as $d) {
+                    $agent->fixbetrates()->updateExistingPivot($d, ['status' => 1]);
+                    }
                     $user = Auth::user();
                     $master_id=$user->id;
                     $transation=New TransationPoint;
@@ -520,10 +536,13 @@ class MainController extends Controller
                     $transation->save();
                  });
                 }elseif($points<$tpoints){
-                    DB::transaction(function() use($agent,$tpoints){
+                    DB::transaction(function() use($agent,$tpoints,$data){
                     $transactionpoints=$tpoints-$agent->points;
                     $agent->points=$tpoints;
                     $agent->save();
+                    foreach ($data as $d) {
+                     $agent->fixbetrates()->updateExistingPivot($d, ['status' => 1]);
+                    }
                     $user = Auth::user();
                     $master_id=$user->id;
                     $transation=New TransationPoint;

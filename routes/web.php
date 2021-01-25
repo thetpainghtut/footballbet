@@ -65,6 +65,7 @@ Route::prefix('master')->group(function () {
   Route::get('awaypoints/{id}','BetController@awaypoints')->name('awaypoints');
   Route::get('overpoints/{id}','BetController@overpoints')->name('overpoints');
   Route::get('underpoints/{id}','BetController@underpoints')->name('underpoints');
+  Route::get('printagentbet/{id}','BetController@printagentbet')->name('printagentbet');
   Route::resource('results','ResultController');
 });
 Route::post('teambyleague','MatchController@teambyleague')->name('teambyleague');
