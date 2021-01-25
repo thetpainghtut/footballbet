@@ -246,18 +246,18 @@
                     if(v.betting_total_goal_status===null){
                       var team_goal_different=v.team_goal_different;
                       if(v.odd_team_status==0){
-                        var bteam_goal_different=v.home_team_score-v.away_team_score;
+                        var bteam_goal_different=Number(v.home_team_score)-Number(v.away_team_score);
                       }else{
-                        var bteam_goal_different=v.away_team_score-v.home_team_score;
+                        var bteam_goal_different=Number(v.away_team_score)-Number(v.home_team_score);
                       }
                       
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
-                        winloosepoint+=v.goal_different_greater;
+                        winloosepoint+=Number(v.goal_different_greater);
                         }else if(bteam_goal_different<team_goal_different){
-                          winloosepoint+=v.goal_different_less;
+                          winloosepoint+=Number(v.goal_different_less);
                         }else{
-                          winloosepoint+=v.goal_different_equal;
+                          winloosepoint+=Number(v.goal_different_equal);
                         }
                      
                         totalpoint+=winloosepoint;
@@ -266,14 +266,14 @@
                       
                     }else{
                       var team_goal_different=v.team_goal;
-                      var bteam_goal_different=v.home_team_score+v.away_team_score;
+                      var bteam_goal_different=Number(v.home_team_score)+Numer(v.away_team_score);
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
-                        winloosepoint+=v.goal_different_greater;
+                        winloosepoint+=Number(v.goal_different_greater);
                         }else if(bteam_goal_different<team_goal_different){
-                          winloosepoint+=v.goal_different_less;
+                          winloosepoint+=Number(v.goal_different_less);
                         }else{
-                          winloosepoint+=v.goal_different_equal;
+                          winloosepoint+=Number(v.goal_different_equal);
                         }
                      
                         totalpoint+=winloosepoint;

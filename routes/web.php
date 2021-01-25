@@ -33,6 +33,7 @@ Route::post('storeresult','MainController@storeresult')->name('storeresult');
 Route::post('cancelbet','MainController@cancelbet')->name('cancelbet');
 Route::post('generatepoint','MainController@generatepoint')->name('generatepoint');
 Route::get('result','MainController@result')->name('result');
+Route::post('mainresult','MainController@mainresult')->name('mainresult');
 Route::get('bet_list','MainController@bet_list')->name('bet_list');
 Route::post('betsbyagent','MainController@betsbyagent')->name('betsbyagent');
 Route::post('agentbetlist','MainController@agentbetlist')->name('agentbetlist');
@@ -67,6 +68,7 @@ Route::prefix('master')->group(function () {
   Route::get('underpoints/{id}','BetController@underpoints')->name('underpoints');
   Route::get('printagentbet/{id}','BetController@printagentbet')->name('printagentbet');
   Route::resource('results','ResultController');
+  Route::post('resultbydate','ResultController@resultbydate')->name('resultbydate');
 });
 Route::post('teambyleague','MatchController@teambyleague')->name('teambyleague');
 Route::post('storebet','MatchController@storebet')->name('storebet');

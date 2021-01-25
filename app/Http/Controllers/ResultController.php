@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Result;
+use Carbon\Carbon;
 class ResultController extends Controller
 {
     /**
@@ -13,7 +14,11 @@ class ResultController extends Controller
      */
     public function index()
     {
-        $results=Result::all();
+        $date=Carbon::now()->toDateString();
+        //dd($date);
+        $results=Result::with('match')->whereHas('match',function($query) use($date){
+            $query->where('event_date',$date);
+        })->get();
         return view('backend.result.index',compact('results'));
     }
 
@@ -95,5 +100,15 @@ class ResultController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function resultbydate(Request $request){
+        $date=$request->date;
+        //dd($date);
+        $results=Result::with('match.home_team')->with('match.away_team')->with('match.league')->whereHas('match',function($query) use($date){
+            $query->where('event_date',$date);
+        })->get();
+
+        return $results;
     }
 }

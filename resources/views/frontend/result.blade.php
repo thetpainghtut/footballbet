@@ -31,6 +31,18 @@
   </div> --}}
 
   <div class="row my-4">
+    <div class="col-12">
+      <form method="" action="" class="mb-4">
+                <div class="form-row">
+                  <div class="col-3">
+                    <input type="date" class="form-control sdate" placeholder="Start Date">
+                  </div>
+                  <div class="col-3">
+                    <a href="#" class="btn btn-info btnsearch">search</a>
+                  </div>
+                </div>
+              </form>
+    </div>
     <div class="col-md-12">
       <div class="table-responsive">
         <table class="table table-bordered">
@@ -41,7 +53,7 @@
             <th scope="col">Goal Score</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody">
          @foreach($results as $result)
           <tr>
             <td colspan="4" class="table-info">{{$result->name}}</td>
@@ -74,6 +86,50 @@
 @section('script')
   <script type="text/javascript">
     $(document).ready(function(){
+
+      $(".btnsearch").click(function(){
+      //alert("ok");
+      var date=$(".sdate").val();
+      var url="{{route('mainresult')}}";
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $.post(url,{date:date},function(res){
+        var html="";
+        $.each(res,function(i,v){
+         html+=`<tr>
+            <td colspan="4" class="table-info">${v.name}</td>
+            </tr>`
+            $.each(v.matches,function(j,k){
+              html+=`<tr>
+            <th scope="row">${(k.event_date)} ${tConvert(k.event_time)}</th>
+            <td class="align-middle">${k.home_team.name} - ${k.away_team.name}</td>`
+            if(k.result==null){
+            html+=`<td>-</td>`
+            }else{
+            html+=`<td class="align-middle">${k.result.home_team_score}-${k.result.away_team_score}</td>`
+            }
+         html+=`</tr>`
+            })
+        })
+        $(".tbody").html(html)
+      })
+
+    })
+
+      function tConvert (time) {
+          time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+          if (time.length > 1) { // If time format correct
+          time = time.slice (1);  // Remove full string match value
+          time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+          time[0] = +time[0] % 12 || 12; // Adjust hours
+          }
+        return time.join (''); // return adjusted time or original string
+      }
       
     });
   </script>

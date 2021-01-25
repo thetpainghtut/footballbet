@@ -22,8 +22,20 @@
               <h6 class="text-uppercase mb-0 d-inline-block">Result List Today</h6>
             </div>
             <div class="card-body">
+              
+                <div class="form-row">
+                  <div class="col-6">
+                   <div class="form-group">
+                    <input type="date" class="form-control sdate" id="exampleFormControlInput1" placeholder="EventDate">
+                  </div>
+                  </div>
+                  <div class="col-6">
+                    <a href="#" class="btn btn-info btnsearch">search</a>
+                  </div>
+                </div>
+              
               <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered dataTable">
                 <thead class="thead-dark">
                   <tr>
                     <th>#</th>
@@ -35,7 +47,7 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="tbody">
                   @php 
                   $i=1;
                   @endphp
@@ -111,7 +123,7 @@
   $(document).ready(function(){
 
 
-    $(".btnedit").click(function(){
+    $(".tbody").on('click','.btnedit',function(){
       $('#editresultmodal').modal('show');
       var match=$(this).data('match');
       var id=$(this).data('id');
@@ -174,7 +186,7 @@
       
     })
 
-     $(".gentratepoint").click(function(){
+     $(".tbody").on('click','.gentratepoint',function(){
         var id=$(this).data('id');
         var url="{{route('generatepoint')}}";
         $.ajaxSetup({
@@ -191,6 +203,42 @@
         })
 
      })
+
+     $(".btnsearch").click(function(){
+      //alert("ok");
+      var date=$(".sdate").val();
+      var url="{{route('resultbydate')}}";
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $.post(url,{date:date},function(res){
+        var html="";
+        var j=1;
+        $.each(res,function(i,v){
+          html+=`<tr>
+                    <td class="align-middle">${j++}</td>
+                    <td class="align-middle">${v.match.home_team.name}-${v.match.away_team.name}</td>
+                    <td class="align-middle">${v.home_team_score}</td>
+                    <td class="align-middle">${v.away_team_score}</td>
+                    <td class="align-middle">${v.match.league.name}</td>
+                    <td class="align-middle">${v.match.event_date}</td>
+                    <td class="align-middle">`
+                      if(v.match_status==1){
+                      html+=`<a href="#" class="btn btn-warning btnedit" data-id="${v.id}" data-match="${v.match.home_team.name}-${v.match.away_team.name}">Edit</a>
+                      <button class="btn btn-info btn-sm gentratepoint" data-id="${v.id}">generate point</button>`
+                      }else{
+                      html+=`<button class="btn btn-success btn-sm" >generate complete</button>`
+                      }
+                    html+=`</td>
+                  </tr>`
+        })
+        $(".tbody").html(html)
+      })
+
+    })
 
   })
   

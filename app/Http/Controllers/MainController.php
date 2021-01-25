@@ -380,8 +380,19 @@ class MainController extends Controller
     }
 
     public function result(){
-        $results=League::whereHas('matches')->get();
+        $date=Carbon::now()->toDateString();
+        $results=League::whereHas('matches',function($query) use($date){
+            $query->where('event_date',$date);
+        })->get();
         return view('frontend.result',compact('results'));
+    }
+
+    public function mainresult(Request $request){
+        $date=$request->date;
+        $results=League::with('matches.home_team')->with('matches.away_team')->with('matches.result')->whereHas('matches',function($query) use($date){
+            $query->where('event_date',$date);
+        })->get();
+        return $results;
     }
 
     public function bet_list(){
