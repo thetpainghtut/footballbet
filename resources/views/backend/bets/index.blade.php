@@ -44,8 +44,6 @@
                     <th scope="col">Bet</th>
                     <th scope="col">Points</th>
                     <th scope="col">Win/loose points</th>
-                    <th>Action</th>
-
                   </tr>
                 </thead>
                 <tbody class="mytbody">
@@ -169,7 +167,7 @@
                     @endif
                   
                   @else --}}
-                  <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->bcreated_at}}" data-agentid="{{$betrate->agent_id}}">cancel</a></td>
+                  {{-- <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->bcreated_at}}" data-agentid="{{$betrate->agent_id}}">cancel</a></td> --}}
                   {{-- @endif --}}
                     
                   </tr>
@@ -323,10 +321,10 @@
                   }
 
                 
-                 html+= `<td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="${v.bcreated_at}" data-agentid="${v.agent_id}">cancel</a></td>
-                  `
+                 /*html+= `<td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="${v.bcreated_at}" data-agentid="${v.agent_id}">cancel</a></td>
+                  `*/
         })
-          html+=`<tr><td colspan="7">totalpoint</td><td colspan="2">${totalpoint}</td></tr>`
+          html+=`<tr><td colspan="7">totalpoint</td><td>${totalpoint}</td></tr>`
       })
       $(".mytbody").html(html);
 
