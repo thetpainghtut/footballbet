@@ -23,6 +23,7 @@
                   $todaydate=$date->toDateString();
                   $now = Carbon\Carbon::now();
                   $current_time=date("h:i A",strtotime($now));
+                  $totalpoint=0;
 
         @endphp
                   //dd($current_time);
@@ -47,9 +48,9 @@
                     ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
                     @endif
                   </td>
-                  <td class="align-middle">{{$betrate->bet_amount}}</td>
+                  <td class="align-middle">{{$betrate->bet_amount}}@if($betrate->status==2)<span style="color: yellow;">cancel</span> @endif</td>
 
-                  
+                @if($betrate->status!=2)
                   @if($betrate->home_team_score==null)
                   <td class="align-middle">-</td>
                   @else
@@ -83,6 +84,8 @@
                         }else{
                           $winloosepoint+=$betrate->goal_different_equal;
                         }
+
+                        $totalpoint+=$winloosepoint;
                      
                       @endphp
                      {{$winloosepoint}}
@@ -99,7 +102,7 @@
                         }else{
                           $winloosepoint+=$betrate->goal_different_equal;
                         }
-                     
+                      $totalpoint+=$winloosepoint;
                       @endphp
                      {{$winloosepoint}}
                     
@@ -107,9 +110,13 @@
 
                   </td>
                   @endif
+                  @else
+                    <td class="align-middle">-</td>
+                  @endif
                     
                   </tr>
                   @endforeach
+                  <tr><td colspan="6">Total point</td><td>{{$totalpoint}}</td></tr>
         </tbody>
      </table>
 	

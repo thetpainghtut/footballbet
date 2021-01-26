@@ -8,7 +8,6 @@
           <div class="card">
             <div class="card-header">
               <h6 class="text-uppercase mb-0 d-inline-block">Bet List</h6>
-              <span class="float-right">Dec 06, 2020</span>
             </div>
             <div class="card-body">
               <form method="" action="" class="mb-4">

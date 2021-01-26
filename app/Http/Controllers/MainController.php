@@ -574,4 +574,9 @@ class MainController extends Controller
 
     }
 
+    public function transactionhistory(){
+        
+        return view('frontend.thistory');
+    }
+
 }

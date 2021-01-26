@@ -40,10 +40,7 @@ Route::post('agentbetlist','MainController@agentbetlist')->name('agentbetlist');
 Route::post('sellpoint','MainController@sellpoint')->name('sellpoint');
 Route::post('addpoint','MainController@addpoint')->name('addpoint');
 Route::post('generatestartingpoint','MainController@generatestartingpoint')->name('generatestartingpoint');
-Route::get('report', function (){
-  return view('frontend.report');
-})->name('report');
-
+Route::get('transactionhistory', 'MainController@transactionhistory')->name('transactionhistory');
 Route::get('report_detail', function (){
   return view('frontend.report_detail');
 })->name('report_detail');
@@ -67,6 +64,8 @@ Route::prefix('master')->group(function () {
   Route::get('overpoints/{id}','BetController@overpoints')->name('overpoints');
   Route::get('underpoints/{id}','BetController@underpoints')->name('underpoints');
   Route::get('printagentbet/{id}','BetController@printagentbet')->name('printagentbet');
+  Route::get('todayagentbet','BetController@todayagentbet')->name('todayagentbet');
+  Route::get('todaybetlistbyagent','BetController@todaybetlistbyagent')->name('todaybetlistbyagent');
   Route::resource('results','ResultController');
   Route::post('resultbydate','ResultController@resultbydate')->name('resultbydate');
 });

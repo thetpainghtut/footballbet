@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Agent;
 use PDF;
+use Yajra\DataTables\Facades\DataTables;
 
 class BetController extends Controller
 {
@@ -25,6 +26,7 @@ class BetController extends Controller
                 ->where('agent_betrate.deleted_at',null)
                 ->where('agent_betrate.status','=',0)
                 ->whereBetween('matches.event_date',[$start_date,$end_date])
+                ->orderBy('matches.created_at', 'desc')
                 ->get();
         $mymatches=$agents->groupBy('match_id');
         //dd($mymatches);
@@ -149,5 +151,30 @@ class BetController extends Controller
 
       // download PDF file with download method
         return $pdf->download($agentname.'.pdf');
+    }
+
+    public function todayagentbet(){
+        return view('backend.bets.liveagentbet');
+    }
+
+    public function todaybetlistbyagent(){
+    $start_date=Carbon::now()->toDateString();
+    $addingday =Carbon::now()->addDays(1);
+    $end_date=$addingday->toDateString();
+    $betrates=DB::table('agent_betrate')
+                ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                ->join('matches','matches.id','=','betrates.match_id')
+                ->leftJoin('results','results.match_id','=','matches.id')
+                ->join('teams as teama','teama.id','=','matches.home_team_id')
+                ->join('teams as teamb','teamb.id','=','matches.away_team_id')
+                ->join('agents','agents.id','=','agent_betrate.agent_id')
+                ->join('users','users.id','=','agents.user_id')
+                ->select('agent_betrate.*','matches.*','results.*','teama.name as homename','teamb.name as awayname','users.name as agentname','agents.commission_rate as rate','agent_betrate.created_at as bcreated_at','betrates.*')
+                ->where('agent_betrate.status','=',0)
+                ->whereBetween('matches.event_date',[$start_date,$end_date])
+                ->where('agent_betrate.deleted_at',null)
+                ->orderBy('agent_betrate.created_at', 'desc')
+                ->get();
+        return Datatables::of($betrates)->addIndexColumn()->toJson();
     }
 }

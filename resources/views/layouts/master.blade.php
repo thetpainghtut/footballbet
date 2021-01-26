@@ -58,9 +58,9 @@
           <li class="nav-item mx-md-2 {{ Request::is('bet_list') ? 'active' : '' }}">
             <a class="nav-link" href="{{route('bet_list')}}">Bet List</a>
           </li>
-         {{--  <li class="nav-item mx-md-2 {{ Request::is('report') ? 'active' : '' }}">
-            <a class="nav-link" href="{{route('report')}}">Report</a>
-          </li> --}}
+           <li class="nav-item mx-md-2 {{ Request::is('transactionhistory') ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('transactionhistory')}}">Transaction History</a>
+          </li>
           <li class="nav-item dropdown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 {{ Auth::user()->name }}
