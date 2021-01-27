@@ -14,6 +14,7 @@ use App\TransationPoint;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Response;
+use Yajra\DataTables\Facades\DataTables;
 
 class MainController extends Controller
 {
@@ -151,6 +152,7 @@ class MainController extends Controller
         $transation=New TransationPoint;
         $transation->from=$user->id;
         $transation->to=1;
+        $transation->match_id=$bet->match->id;
         $transation->transation_type_id=3;
         $transation->points=$p;
         $transation->description="bet point";
@@ -280,6 +282,7 @@ class MainController extends Controller
         $transation=New TransationPoint;
         $transation->from=$master_id;
         $transation->to=$agent->user_id;
+        $transation->match_id=$data->match_id;
         $transation->transation_type_id=3;
         $transation->points=$addingpoints;
         $transation->description="cancel point";
@@ -365,8 +368,9 @@ class MainController extends Controller
                     $transation=New TransationPoint;
                     $transation->from=$master_id;
                     $transation->to=$agent->user_id;
+                    $transation->match_id=$match_id;
                     $transation->transation_type_id=4;
-                    $transation->points=$winloosepoint;
+                    $transation->points=$betpoint+$winloosepoint;
                     $transation->description="refund point";
                     $transation->save();
                    
@@ -575,8 +579,39 @@ class MainController extends Controller
     }
 
     public function transactionhistory(){
-        
-        return view('frontend.thistory');
+
+        $user = Auth::user();
+        $id=$user->id;
+        $transaction=TransationPoint::where('from',$id)->whereDate('created_at',Carbon::today())->orWhere('to',$id)->whereDate('created_at',Carbon::today())->get();
+        //dd($transaction);
+        return view('frontend.thistory',compact('transaction'));
+    }
+
+    public function gethistory(Request $request){
+        $sdate=$request->sdate;
+        $edate=$request->edate;
+        $user = Auth::user();
+        $id=$user->id;
+
+        $transaction=TransationPoint::with('match.home_team')->with('match.away_team')->with('transation_type')->where('from',$id)->whereBetween('created_at',[$sdate,$edate])->orWhere('to',$id)->whereBetween('created_at',[$sdate,$edate])->get();
+       // dd($transaction);
+        return Datatables::of($transaction)->addIndexColumn()->toJson();
+    }
+
+    public function alltransaction(){
+    $transaction=TransationPoint::whereDate('created_at',Carbon::today())->get();
+        return view('backend.alltransaction',compact('transaction'));
+    }
+
+    public function allhistorybydate(Request $request){
+         $sdate=$request->sdate;
+        $edate=$request->edate;
+        $user = Auth::user();
+        $id=$user->id;
+
+        $transaction=TransationPoint::with('match.home_team')->with('match.away_team')->with('transation_type')->with('fromuser')->with('touser')->whereBetween('created_at',[$sdate,$edate])->get();
+       // dd($transaction);
+        return Datatables::of($transaction)->addIndexColumn()->toJson();
     }
 
 }

@@ -9,7 +9,7 @@ class TransationPoint extends Model
 {
 	use SoftDeletes;
  	 protected $fillable=[
-    	'from','to','transation_type_id','points','description',
+    	'from','to','match_id','transation_type_id','points','description',
 	];
 
 	public function fromuser()
@@ -20,6 +20,13 @@ class TransationPoint extends Model
   public function touser()
   {
     return $this->belongsTo('App\User','to');
+  }
+
+  public function transation_type(){
+     return $this->belongsTo('App\TransationType');
+  }
+  public function match(){
+    return $this->belongsTo('App\Match');
   }
     
 }

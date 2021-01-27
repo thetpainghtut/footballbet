@@ -134,7 +134,7 @@ class BetController extends Controller
         $data=DB::table('agent_betrate')
                 ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
                 ->join('matches','matches.id','=','betrates.match_id')
-                ->Join('results','results.match_id','=','matches.id')
+                ->join('results','results.match_id','=','matches.id')
                 ->join('teams as teama','teama.id','=','matches.home_team_id')
                 ->join('teams as teamb','teamb.id','=','matches.away_team_id')
                 ->join('agents','agents.id','=','agent_betrate.agent_id')

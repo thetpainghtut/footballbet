@@ -10,6 +10,7 @@
                 <th>No</th>
                 <th>Agent</th>
                 <th>Soccer</th>
+                <th>Type</th>
                	<th>Rate</th>
                 <th>Bet</th>
                 <th>Points</th>
@@ -40,6 +41,21 @@
                   @else
                   <td class="align-middle">{{$betrate->homename}}({{$betrate->home_team_score}})- <span class="text text-danger">{{$betrate->awayname}}</span>({{$betrate->away_team_score}})</td>
                   @endif
+                  <td class="align-middle">
+                    @if(is_null($betrate->betting_total_goal_status))
+                      @if($betrate->betting_team_status==0)
+                        Home
+                      @else
+                        Away
+                      @endif
+                    @elseif(is_null($betrate->betting_team_status))
+                      @if($betrate->betting_total_goal_status!=0)
+                        Goal Under
+                      @else
+                        Goal Over
+                      @endif
+                    @endif
+                  </td>
                   <td class="align-middle">{{$betrate->rate}}</td>
                   <td class="align-middle">
                     @if(is_null($betrate->betting_total_goal_status))
@@ -116,7 +132,7 @@
                     
                   </tr>
                   @endforeach
-                  <tr><td colspan="6">Total point</td><td>{{$totalpoint}}</td></tr>
+                  <tr><td colspan="7">Total point</td><td>{{$totalpoint}}</td></tr>
         </tbody>
      </table>
 	

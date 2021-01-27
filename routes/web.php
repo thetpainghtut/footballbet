@@ -41,6 +41,9 @@ Route::post('sellpoint','MainController@sellpoint')->name('sellpoint');
 Route::post('addpoint','MainController@addpoint')->name('addpoint');
 Route::post('generatestartingpoint','MainController@generatestartingpoint')->name('generatestartingpoint');
 Route::get('transactionhistory', 'MainController@transactionhistory')->name('transactionhistory');
+Route::post('gethistory','MainController@gethistory')->name('gethistory');
+Route::get('alltransaction', 'MainController@alltransaction')->name('alltransaction');
+Route::post('allhistorybydate','MainController@allhistorybydate')->name('allhistorybydate');
 Route::get('report_detail', function (){
   return view('frontend.report_detail');
 })->name('report_detail');

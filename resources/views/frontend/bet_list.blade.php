@@ -71,7 +71,7 @@
                     ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
                     @endif
                   </td>
-                  <td class="align-middle">{{$betrate->bet_amount}}</td>
+                  <td class="align-middle">{{number_format($betrate->bet_amount)}}</td>
 
                   
                   @if($betrate->home_team_score==null)
@@ -110,7 +110,7 @@
                      
                         $totalpoint+=$winloosepoint;
                       @endphp
-                     {{$winloosepoint}}
+                     {{number_format($winloosepoint)}}
                       
                     @else
                       @php 
@@ -127,7 +127,7 @@
                      
                         $totalpoint+=$winloosepoint;
                       @endphp
-                     {{$winloosepoint}}
+                     {{number_format($winloosepoint)}}
                     
                     @endif
 
@@ -135,7 +135,7 @@
                   @endif        
                   </tr>
                   @endforeach
-                  <tr><td colspan="6">totalpoint</td><td colspan="2">{{$totalpoint}}</td></tr>
+                  <tr><td colspan="6">totalpoint</td><td colspan="2">{{number_format($totalpoint)}}</td></tr>
                 </tbody>
         </table>
       </div>
@@ -238,7 +238,7 @@
                   }
                     
                   html+=`</td>
-                  <td class="align-middle">${v.bet_amount}</td>`
+                  <td class="align-middle">${thousands_separators(v.bet_amount)}</td>`
                   if(v.home_team_score==null){
                   html+=`<td class="align-middle">-</td>`
                   }else{
@@ -262,11 +262,11 @@
                      
                         totalpoint+=winloosepoint;
                     
-                     html+=`${winloosepoint}`
+                     html+=`${thousands_separators(winloosepoint)}`
                       
                     }else{
                       var team_goal_different=v.team_goal;
-                      var bteam_goal_different=Number(v.home_team_score)+Numer(v.away_team_score);
+                      var bteam_goal_different=Number(v.home_team_score)+Number(v.away_team_score);
                       var winloosepoint=0;
                       if(bteam_goal_different>team_goal_different){
                         winloosepoint+=Number(v.goal_different_greater);
@@ -278,7 +278,7 @@
                      
                         totalpoint+=winloosepoint;
                      
-                     html+=`${winloosepoint}`
+                     html+=`${thousands_separators(winloosepoint)}`
                     
                     }
 
@@ -287,14 +287,18 @@
 
                 
         })
-          html+=`<tr><td colspan="6">totalpoint</td><td colspan="2">${totalpoint}</td></tr>`
+          html+=`<tr><td colspan="6">totalpoint</td><td colspan="2">${thousands_separators(totalpoint)}</td></tr>`
       })
       $(".mytbody").html(html);
 
       })
 
     })
-      
+    function thousands_separators(num){
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return num_parts.join(".");
+    }
     });
   </script>
 @endsection

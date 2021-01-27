@@ -29,7 +29,7 @@
               @php
               $day=date('w');
               @endphp
-              @if($day==1 || $day==5)
+              @if($day==1 || $day==4)
               <a href="#" class="btn btn-info btn-sm float-left generate my-4">Generate to starting point</a>
               @endif
               <div class="table-responsive">
@@ -59,10 +59,10 @@
                   </td>
                     <td class="align-middle">{{$row->user->name}}</td>
                     <td class="align-middle">{{$row->phone_no}}</td>
-                    <td class="align-middle">{{$row->points}}</td>
+                    <td class="align-middle">{{number_format($row->points)}}</td>
                     <td class="align-middle">{{$row->commission_rate}}</td>
-                    <td class="align-middle">{{$row->min_point}}</td>
-                    <td class="align-middle">{{$row->max_point}}</td>
+                    <td class="align-middle">{{number_format($row->min_point)}}</td>
+                    <td class="align-middle">{{number_format($row->max_point)}}</td>
                     <td class="align-middle">
                       <a href="{{route('agents.edit',$row->id)}}" class="btn btn-warning">Edit</a>
                       <form action="{{ route('agents.destroy',$row->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
@@ -302,6 +302,12 @@
 
         })
     })
+
+    function thousands_separators(num){
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return num_parts.join(".");
+    }
 
 
   })

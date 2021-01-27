@@ -104,8 +104,8 @@
           <li class="sidebar-list-item"><a href="{{route('todaybetlist')}}" class="sidebar-link text-muted {{ Request::is('todaybetlist*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Today Bets</span></a></li> 
           <li class="sidebar-list-item"><a href="{{route('todayagentbet')}}" class="sidebar-link text-muted {{ Request::is('todayagentbet*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Bets</span></a></li> 
           <li class="sidebar-list-item"><a href="{{route('results.index')}}" class="sidebar-link text-muted {{ Request::is('master/results*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Results</span></a></li>
+          <li class="sidebar-list-item"><a href="{{route('alltransaction')}}" class="sidebar-link text-muted {{ Request::is('alltransaction*') ? 'active' : '' }}"><i class="o-survey-1 mr-3 text-gray"></i><span>Transaction</span></a></li>
               
-
 
           {{-- <li class="sidebar-list-item"><a href="#" data-toggle="collapse" data-target="#pages" aria-expanded="false" aria-controls="pages" class="sidebar-link text-muted"><i class="o-wireframe-1 mr-3 text-gray"></i><span>Teams</span></a>
             <div id="pages" class="collapse">

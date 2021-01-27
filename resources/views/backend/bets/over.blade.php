@@ -29,9 +29,7 @@
                   @php 
                   $i=1;
                   $date = Carbon\Carbon::now();
-                  $todaydate=$date->toDateString();
-                  $now = Carbon\Carbon::now();
-                  $current_time=date("h:i A",strtotime($now));
+                  $current_time=$date->toDateTimeString();
                   //dd($current_time);
                   @endphp
                   @foreach($mymatches as $agents)
@@ -57,7 +55,7 @@
                     ({{$betrate->team_goal}}{{$betrate->team_goal_bet_odd}})
                     @endif
                   </td>
-                  <td class="align-middle">{{$betrate->bet_amount}}</td>
+                  <td class="align-middle">{{number_format($betrate->bet_amount)}}</td>
 
                   
                   @if($betrate->home_team_score==null)
@@ -95,7 +93,7 @@
                         }
                 
                       @endphp
-                     {{$winloosepoint}}
+                     {{number_format($winloosepoint)}}
                       
                     @else
                       @php 
@@ -112,25 +110,18 @@
                      
                 
                       @endphp
-                     {{$winloosepoint}}
+                     {{number_format($winloosepoint)}}
                     
                     @endif
 
                   </td>
                   @endif
 
-                
-                 {{--  @if($todaydate==$betrate->match->event_date)
-
-                    @if($current_time>=$event_time)
-                      <td class="align-middle"><a href="#" class="badge badge-primary">time up</a></td>
-                    @else
-                     <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->pivot->created_at}}" data-agentid="{{$agent->id}}">cancel</a></td>
-                    @endif
-                  
-                  @else --}}
+                  @if($current_time>=$betrate->datetime)
+                      <td class="align-middle"><a href="#" class="badge badge-primary">time up</a></td>  
+                  @else
                   <td class="align-middle"><a href="#" class="btn btn-warning btn-sm btncancel" data-id="{{$betrate->bcreated_at}}" data-agentid="{{$betrate->agent_id}}">cancel</a></td>
-                  {{-- @endif --}}
+                  @endif
                     
                   </tr>
                   @endforeach

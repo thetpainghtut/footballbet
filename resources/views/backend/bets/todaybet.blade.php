@@ -53,10 +53,10 @@
                       @else
                       <td class="align-middle">{{$hometeam}} - <span class="text text-danger">{{$awayteam}}</span></td>
                       @endif
-                      <td><a  href="{{route('homepoints',$row->match_id)}}" class="badge badge-primary" style="cursor: pointer;">{{$homepoints}}</a></td>
-                      <td><a href="{{route('awaypoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{$awaypoints}}</a></td>
-                      <td><a href="{{route('overpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{$overpoints}}</a></td>
-                      <td><a href="{{route('underpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{$underpoints}}</a></td>
+                      <td><a  href="{{route('homepoints',$row->match_id)}}" class="badge badge-primary" style="cursor: pointer;">{{number_format($homepoints)}}</a></td>
+                      <td><a href="{{route('awaypoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($awaypoints)}}</a></td>
+                      <td><a href="{{route('overpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($overpoints)}}</a></td>
+                      <td><a href="{{route('underpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($underpoints)}}</a></td>
                       </tr>
                   @endforeach
                 </tbody>

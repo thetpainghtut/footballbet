@@ -17,6 +17,7 @@ class CreateTransationPointsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('from');
             $table->unsignedBigInteger('to');
+            $table->unsignedBigInteger('match_id')->nullable();
             $table->unsignedBigInteger('transation_type_id');
             $table->integer('points');
             $table->string('description');
@@ -29,6 +30,9 @@ class CreateTransationPointsTable extends Migration
                     ->onDelete('cascade');
             $table->foreign('transation_type_id')
                     ->references('id')->on('transation_types')
+                    ->onDelete('cascade');
+            $table->foreign('match_id')
+                    ->references('id')->on('matches')
                     ->onDelete('cascade');
             $table->timestamps();
 
