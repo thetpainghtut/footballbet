@@ -24,7 +24,7 @@
                 </div>
               </form>
               <div class="table-responsive">
-                <table class="table table-bordered" id="historytable">
+                <table class="table table-bordered dataTable" id="historytable">
                   <thead class="thead-dark">
                     <tr>
                       <th scope="col">#</th>
