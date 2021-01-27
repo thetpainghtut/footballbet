@@ -39,10 +39,20 @@ class MainController extends Controller
     }
 
     public function matchbyleague(Request $request){
-    	$id=$request->id;
+    $id=$request->id;
+    $start_date=Carbon::now()->toDateString();
+    $addingday =Carbon::now()->addDays(1);
+    $end_date=$addingday->toDateString();
+
+    $time = Carbon::now();
+    $mytime=strtotime($time);
+    $addingtime=date("Y-m-d H:i", strtotime('+5 minutes', $mytime));
     	//dd($id);
-    	$matches=League::with('matches.betrates')->with('matches.home_team')->with('matches.away_team')->whereHas('matches')->where('id',$id)->get();
-    	return $matches;
+    $matches=Match::with('betrates')->with('league')->whereHas('league',function($query) use($id){
+        $query->where('id',$id);
+    })->with('home_team')->with('away_team')->whereHas('betrates')->doesntHave('result')->whereBetween('event_date',[$start_date,$end_date])->where('datetime','>',$addingtime)->get();
+    $mymatches=$matches->groupBy('league.name');
+    return $mymatches;
     }
 
     public function loginuser(){

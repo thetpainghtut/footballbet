@@ -311,55 +311,64 @@
       }, 1000);*/
 
       function showData(res) {
-        var html=""
-        $.each(res,function(i,v){
+                 var html="";
+         $.each(res,function(i,v){
           html+=`<tr class="table-primary">
-                <td colspan="8">${v.name}
-                  <span class="pagereload"></span>
-                </td>
-              </tr>
-            `
-          $.each(v.matches,function(j,k){
-            var betrates=k.betrates;
-            var rate=betrates.pop();
-            var time=tConvert(k.event_time);
-            if(rate.team_goal_different==null){
-              rate.team_goal_different="";
-            }
-            if(rate.team_bet_odd==null){
-              rate.team_bet_odd="";
-            }
-            if(rate.team_goal==null){
-              rate.team_goal="";
-            }
-            if(rate.team_goal_bet_odd==null){
-              rate.team_goal_bet_odd="";
-            }     
-            //console.log(k.betrate.odd_team_status);
-            html+=`
-            <tr class="text-center">
-            <th scope="row">
-              ${time}
-              <p class="mb-0 text-danger">Live</p>
-            </th>`
-            if(rate.odd_team_status==0){
-              //alert("ok");
-            html+=`<td class="align-middle"><span class="text text-danger">${k.home_team.name}</span> - ${k.away_team.name}</td>`}
-            else{
-            html+=`<td class="align-middle">${k.home_team.name} - <span class="text text-danger">${k.away_team.name}</span></td>`
-          }
+              <td colspan="8">${i}
+                <span class="pagereload"></span>
+              </td>
+            </tr>`
+            $.each(v,function(j,k){
+              //console.log(k.betrates);
+              var latestbetrate=k.betrates.pop();
+              var time=k.event_time;
+              if(latestbetrate.team_goal_different==null){
+                latestbetrate.team_goal_different="";
+              }
+              if(latestbetrate.team_bet_odd==null){
+                latestbetrate.team_bet_odd="";
+              }
+              if(latestbetrate.team_goal==null){
+                latestbetrate.team_goal="";
+              }
+              if(latestbetrate.team_goal_bet_odd==null){
+                latestbetrate.team_goal_bet_odd="";
+              }   
+            var body=latestbetrate.team_bet_odd.split("");
+            var golaunderover=latestbetrate.team_goal_bet_odd.split("");
+             if(latestbetrate){
+              html+=`<tr class="text-center">
+                      <th scope="row">
+                      ${tConvert(time)}
+                      <p class="mb-0 text-danger">Live</p>
+                    </th>`
+              if(latestbetrate.odd_team_status==0){
+                  html+=`<td class="align-middle"><span class="text text-danger">${k.home_team.name}</span> - ${k.away_team.name}</td>`
+                }else{
+                 html+=`<td class="align-middle">${k.home_team.name} - <span class="text text-danger">${k.away_team.name}</span></td>`
+              }
 
-          html+=` <td class="align-middle">(${rate.team_goal_different}${rate.team_bet_odd})</td>
-          <td class="align-middle pointer">0.95</td>
-            <td class="align-middle pointer">0.95</td>
-            <td class="align-middle">(${rate.team_goal}${rate.team_goal_bet_odd }})</td>
-            <td class="align-middle pointer">0.94</td>
-            <td class="align-middle pointer">0.94</td>
-          </tr>
-            `
-          })
-        })
-        $(".mytbody").html(html);
+              if(body[0]=="-"){
+                html+=`<td class="align-middle"><span class="text-danger">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</span></td>`
+              }else{
+                html+=`<td class="align-middle">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</td>`
+              }
+              
+              html+=`<td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="0" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer" data-id="${latestbetrate.id}" data-status="1" data-matchid="${k.id}" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>`
+              if(golaunderover[0]=="-"){
+                html+=`<td class="align-middle" ><span class="text-danger">(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</span></td>`
+              }else{
+                html+=`<td class="align-middle" >(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</td>`
+              }
+              
+              html+=`<td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-goalstatus="0" data-league="${k.league.name}"data-match="${k.home_team.name} vs ${k.away_team.name}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer"  data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="null" data-goalstatus="1" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td></tr>`
+             }
+            })
+         })
+
+         $(".mytbody").html(html);
       }
 
       function tConvert (time) {
@@ -378,7 +387,7 @@
         //alert("ok");
         var url="{{route('maindata')}}";
         $.get(url,function(res){
-         console.log(res);
+         //console.log(res);
          var html="";
          $.each(res,function(i,v){
           html+=`<tr class="table-primary">
@@ -402,7 +411,8 @@
               if(latestbetrate.team_goal_bet_odd==null){
                 latestbetrate.team_goal_bet_odd="";
               }   
-             // console.log(latestbetrate);
+            var body=latestbetrate.team_bet_odd.split("");
+            var golaunderover=latestbetrate.team_goal_bet_odd.split("");
              if(latestbetrate){
               html+=`<tr class="text-center">
                       <th scope="row">
@@ -414,11 +424,22 @@
                 }else{
                  html+=`<td class="align-middle">${k.home_team.name} - <span class="text text-danger">${k.away_team.name}</span></td>`
               }
-              html+=`<td class="align-middle">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</td>
-              <td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="0" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-              <td class="align-middle pointer" data-id="${latestbetrate.id}" data-status="1" data-matchid="${k.id}" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
-              <td class="align-middle" >(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</td>
-              <td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-goalstatus="0" data-league="${k.league.name}"data-match="${k.home_team.name} vs ${k.away_team.name}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+
+              if(body[0]=="-"){
+                html+=`<td class="align-middle"><span class="text-danger">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</span></td>`
+              }else{
+                html+=`<td class="align-middle">(${latestbetrate.team_goal_different}${latestbetrate.team_bet_odd})</td>`
+              }
+              
+              html+=`<td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="0" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
+              <td class="align-middle pointer" data-id="${latestbetrate.id}" data-status="1" data-matchid="${k.id}" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}" data-goalstatus="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>`
+              if(golaunderover[0]=="-"){
+                html+=`<td class="align-middle" ><span class="text-danger">(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</span></td>`
+              }else{
+                html+=`<td class="align-middle" >(${latestbetrate.team_goal}${latestbetrate.team_goal_bet_odd })</td>`
+              }
+              
+              html+=`<td class="align-middle pointer" data-matchid="${k.id}" data-id="${latestbetrate.id}" data-goalstatus="0" data-league="${k.league.name}"data-match="${k.home_team.name} vs ${k.away_team.name}" data-status="null"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td>
               <td class="align-middle pointer"  data-matchid="${k.id}" data-id="${latestbetrate.id}" data-status="null" data-goalstatus="1" data-league="${k.league.name}" data-match="${k.home_team.name} vs ${k.away_team.name}"><a href="#" style="text-decoration: none;color: inherit;">0.95</a></td></tr>`
              }
             })
