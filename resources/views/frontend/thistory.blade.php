@@ -23,7 +23,7 @@
     </div>
     <div class="col-md-12 my-4">
       <div class="table-responsive">
-        <table class="table table-bordered" id="historytable">
+        <table class="table table-bordered dataTable" id="historytable">
         <thead class="thead-dark">
           <tr>
             <th scope="col">#</th>
@@ -40,7 +40,7 @@
             <td>{{$i++}}</td>
             <td>{{Carbon\Carbon::parse($row->created_at)->format('d-m-Y')}}</td>
             @if($row->match_id!=null)
-            <td>{{$row->match->home_team->name}}vs{{$row->match->away_team->name}}</td>
+            <td>{{$row->match->home_team->name}} vs {{$row->match->away_team->name}}</td>
             @else
             <td>-</td>
             @endif
