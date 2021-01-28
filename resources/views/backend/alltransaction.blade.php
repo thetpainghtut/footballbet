@@ -45,7 +45,7 @@
                       <td>{{$row->fromuser->name}}</td>
                       <td>{{$row->touser->name}}</td>
                       @if($row->match_id!=null)
-                      <td>{{$row->match->home_team->name}}vs{{$row->match->away_team->name}}</td>
+                      <td>{{$row->match->home_team->name}} vs {{$row->match->away_team->name}}</td>
                       @else
                       <td>-</td>
                       @endif
