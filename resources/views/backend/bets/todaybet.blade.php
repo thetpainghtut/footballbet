@@ -11,7 +11,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-              <table class="table table-bordered dataTable">
+              <table class="table table-bordered dataTable" id="bettable">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">No</th>
@@ -23,42 +23,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @php  $i=1; @endphp
-                  @foreach($mymatches as $key=>$value)
-                    @php $homepoints=0;$awaypoints=0;$overpoints=0;$underpoints=0; @endphp
-                    @foreach($value as $row)
-                    @php
-                     $hometeam=$row->homename;
-                     $awayteam=$row->awayname; 
-                     $odd_team_status=$row->odd_team_status;
-                     if(is_null($row->betting_total_goal_status)){
-                      if($row->betting_team_status==0){
-                        $homepoints+=$row->bet_amount;
-                      }else{
-                        $awaypoints+=$row->bet_amount;
-                      }
-                     }else{
-                      if($row->betting_total_goal_status==0){
-                        $overpoints+=$row->bet_amount;
-                      }else{
-                        $underpoints+=$row->bet_amount;
-                      }
-                     }
-                     @endphp
-                    @endforeach
-                      <tr>
-                      <td>{{$i++}}</td>
-                      @if($odd_team_status==0)
-                      <td class="align-middle"><span class="text text-danger">{{$hometeam}}</span> - {{$awayteam}}</td>
-                      @else
-                      <td class="align-middle">{{$hometeam}} - <span class="text text-danger">{{$awayteam}}</span></td>
-                      @endif
-                      <td><a  href="{{route('homepoints',$row->match_id)}}" class="badge badge-primary" style="cursor: pointer;">{{number_format($homepoints)}}</a></td>
-                      <td><a href="{{route('awaypoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($awaypoints)}}</a></td>
-                      <td><a href="{{route('overpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($overpoints)}}</a></td>
-                      <td><a href="{{route('underpoints',$row->match_id)}}" class="badge badge-primary"  style="cursor: pointer;">{{number_format($underpoints)}}</a></td>
-                      </tr>
-                  @endforeach
+                  
                 </tbody>
               </table>
               </div>
@@ -72,7 +37,151 @@
 @section('script')
 <script type="text/javascript">
   $(document).ready(function(){
-    
+    showdata();
+    move();
+    function showdata(){
+      var url="{{route('livetodaybet')}}";
+        $('#bettable').dataTable({
+          "bPaginate": true,
+          "bLengthChange": true,
+          "bFilter": true,
+          "bSort": true,
+          "bInfo": true,
+          "bAutoWidth": true,
+          "bStateSave": true,
+          destroy:true,
+          "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [ -1,0] }
+          ],
+          "bserverSide": true,
+          "bprocessing":true,
+          "ajax": {
+            url: url,
+            type: "GET",
+            dataType:'json',
+          },
+          "columns": [
+          {"data":'DT_RowIndex'},
+          {"data":null,
+            render:function(data, type, full, meta){
+              var hometeam="";
+              var awayteam="";
+              if(data[0].odd_team_status==0){
+                hometeam=`<span class="text text-danger">${data[0].homename}</span>`
+                awayteam=`${data[0].awayname}`
+              }else{
+                awayteam=`<span class="text text-danger">${data[0].awayname}</span>`
+                hometeam=`${data[0].homename}`
+              }
+              return `${hometeam} - ${awayteam}`
+            }
+          },
+          {
+            "data":null,
+            render:function(data, type, full, meta){
+              var home_point=0;
+              var match_id;
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                      if(data[key].betting_total_goal_status==null){
+                        if(data[key].betting_team_status==0){
+                          home_point+=Number(data[key].bet_amount)
+                          match_id=data[key].match_id;
+                        }
+                      }
+                }
+              }
+              var routeUrl="{{route('homepoints',":id")}}"
+              routeUrl=routeUrl.replace(':id',match_id); 
+              return `<a  href="${routeUrl}" class="badge badge-primary" style="cursor: pointer;">${thousands_separators(home_point)}</a>`;
+            }
+          },
+          {
+            "data":null,
+            render:function(data, type, full, meta){
+              var away_point=0;
+              var match_id;
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                      if(data[key].betting_total_goal_status==null){
+                        if(data[key].betting_team_status==1){
+                          away_point+=Number(data[key].bet_amount)
+                          match_id=data[key].match_id;
+                        }
+                      }
+                }
+              }
+              var awayUrl="{{route('awaypoints',":id")}}"
+              awayUrl=awayUrl.replace(':id',match_id); 
+              return `<a  href="${awayUrl}" class="badge badge-primary" style="cursor: pointer;">${thousands_separators(away_point)}</a>`;
+            }
+          },
+          {
+            "data":null,
+            render:function(data, type, full, meta){
+              var over_point=0;
+              var match_id;
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                      if(data[key].betting_total_goal_status!=null){
+                        if(data[key].betting_total_goal_status==0){
+                          over_point+=Number(data[key].bet_amount)
+                          match_id=data[key].match_id;
+                        }
+                      }
+                }
+              }
+              var overUrl="{{route('overpoints',":id")}}"
+              overUrl=overUrl.replace(':id',match_id); 
+              return `<a  href="${overUrl}" class="badge badge-primary" style="cursor: pointer;">${thousands_separators(over_point)}</a>`;
+            }
+          },
+          {
+            "data":null,
+            render:function(data, type, full, meta){
+              var under_point=0;
+              var match_id;
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                      if(data[key].betting_total_goal_status!=null){
+                        if(data[key].betting_total_goal_status==1){
+                          under_point+=Number(data[key].bet_amount)
+                          match_id=data[key].match_id;
+                        }
+                      }
+                }
+              }
+              var underUrl="{{route('underpoints',":id")}}"
+              underUrl=underUrl.replace(':id',match_id); 
+              return `<a  href="${underUrl}" class="badge badge-primary" style="cursor: pointer;">${thousands_separators(under_point)}</a>`;
+            }
+          },
+       ],
+       "info":false
+     });
+    }
+
+    function move(){
+
+        var pos=50;
+
+        var id=setInterval(frame,1000);
+
+        function frame(){
+          if(pos<=0){
+            clearInterval(id)
+            showdata();
+            move();
+          } 
+          pos--;
+        }
+      }
+
+    function thousands_separators(num){
+      var num_parts = num.toString().split(".");
+      num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return num_parts.join(".");
+    }
   })
 </script>
 @endsection

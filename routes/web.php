@@ -61,7 +61,7 @@ Route::prefix('master')->group(function () {
   Route::resource('matches','MatchController');
   Route::get('matches/viewbet/{id}','MatchController@viewbet')->name('viewbet');
   Route::get('todaybetlist','BetController@todaybetlist')->name('todaybetlist');
-
+  Route::get('livetodaybet','BetController@livetodaybet')->name('livetodaybet');
   Route::get('homepoints/{id}','BetController@homepoints')->name('homepoints');
   Route::get('awaypoints/{id}','BetController@awaypoints')->name('awaypoints');
   Route::get('overpoints/{id}','BetController@overpoints')->name('overpoints');

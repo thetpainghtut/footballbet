@@ -14,6 +14,11 @@ class BetController extends Controller
 
    
     public function todaybetlist(){
+    	return view('backend.bets.todaybet');
+    }
+
+
+    public function livetodaybet(){
     $start_date=Carbon::now()->toDateString();
     $addingday =Carbon::now()->addDays(1);
     $end_date=$addingday->toDateString();
@@ -29,9 +34,9 @@ class BetController extends Controller
                 ->orderBy('matches.created_at', 'desc')
                 ->get();
         $mymatches=$agents->groupBy('match_id');
-        //dd($mymatches);
-    	return view('backend.bets.todaybet',compact('mymatches'));
+        return Datatables::of($mymatches)->addIndexColumn()->toJson();
     }
+
     public function homepoints(Request $request){
         $matchid=$request->id;
         $agents=DB::table('agent_betrate')
