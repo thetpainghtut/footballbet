@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class MainController extends Controller
 {
@@ -624,4 +626,42 @@ class MainController extends Controller
         return Datatables::of($transaction)->addIndexColumn()->toJson();
     }
 
+    public function profile($id){
+        $agent=Agent::find($id);
+        return view('frontend.profile',compact('agent'));
+    }
+
+    public function profileupdate($id,Request $request){
+        $validator = $request->validate([
+            'name'  => ['required', 'string', 'max:255'],
+            'email'  => ['required','string','email','max:255'],
+            'phone'  => ['required'],
+            'address'  => ['required','string'],
+        ]);
+         //dd($request);
+        if($validator){
+            $agent=Agent::find($id);
+            $user =User::find($agent->user_id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if($request->password!=null){
+              $user->password = Hash::make($request->password);   
+          }else{
+              $user->password = $request->oldpassword;
+          }
+           
+            $user->save();
+            
+            $agent->phone_no =$request->phone;
+            $agent->address = $request->address;
+            $agent->user_id=$user->id;
+            $agent->save();
+           
+            return redirect()->route('profile',$id)->with("successMsg",'Update Successfully');
+        }
+        else
+        {
+            return redirect::back()->withErrors($validator);
+        }
+    }
 }

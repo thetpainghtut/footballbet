@@ -8,6 +8,9 @@ use App\League;
 use Illuminate\Support\Facades\DB;
 use App\Match;
 use App\Betrate;
+use App\Agent;
+use Auth;
+use App\TransationPoint;
 class MatchController extends Controller
 {
     /**
@@ -149,7 +152,31 @@ class MatchController extends Controller
     public function destroy($id)
     {
         $match=Match::find($id);
-        $match->delete();
+        $user = Auth::user();
+        $master_id=$user->id;
+        $agentbets=DB::table('agent_betrate')
+                    ->join('betrates', 'betrates.id', '=', 'agent_betrate.betrate_id')
+                    ->where('betrates.match_id',$id)
+                    ->get();
+        foreach ($agentbets as $key => $value) {
+            $agent_id=$value->agent_id;
+            $agentpoint=$value->bet_amount;
+            $agent=Agent::find($agent_id);
+            $currentpoint=$agent->points;
+            $addingpoint=$currentpoint+$agentpoint;
+            $agent->points=$addingpoint;
+            $agent->save();
+            $agent->betrates()->where('match_id',$id)->wherePivot('betrate_id',$value->betrate_id)->detach();
+            $transation=New TransationPoint;
+            $transation->from=$master_id;
+            $transation->to=$agent->user_id;
+            $transation->match_id=$id;
+            $transation->transation_type_id=3;
+            $transation->points=$agentpoint;
+            $transation->description="cancel point";
+            $transation->save();
+        }
+       $match->delete();
        return redirect()->route('matches.index')->with('successMsg','Existing match is DELETED in your data');
     }
 

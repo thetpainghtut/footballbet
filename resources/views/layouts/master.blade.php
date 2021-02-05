@@ -102,10 +102,10 @@
                 <span class="badge badge-primary badge-pill p-2">{{Auth::user()->email}}</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                Cash Balance
-                <span class="badge badge-primary badge-pill">50 USD</span>
+                <a href="{{route('profile',Auth::user()->agent->id)}}" style="text-decoration: none;cursor: pointer; color:#000000;">Profile</a>
+                {{-- <span class="badge badge-primary badge-pill">50 USD</span> --}}
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+             {{--  <li class="list-group-item d-flex justify-content-between align-items-center">
                 Statements
                 <span class="badge badge-primary badge-pill">2</span>
               </li>
@@ -116,7 +116,7 @@
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Setting
                 <span class="badge badge-primary badge-pill">2</span>
-              </li>
+              </li> --}}
             </div>
           </ul>
         </div>

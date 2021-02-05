@@ -20,6 +20,8 @@ Route::get('/', function () {
 Auth::routes();
 Route::middleware('auth')->group(function () {
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profile/{id}','MainController@profile')->name('profile');
+Route::match(['put', 'patch'],'profileupdate/{id}','MainController@profileupdate')->name('profileupdate');
 
 Route::get('main','MainController@main')->name('main');
 Route::get('maindata',"MainController@maindata")->name('maindata');
